@@ -1,0 +1,5 @@
+openai>=1.0.0
+nltk>=3.8
+spacy>=3.7
+requests>=2.31
+pytest>=7.4

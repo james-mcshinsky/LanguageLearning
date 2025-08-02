@@ -11,13 +11,25 @@ To get started, you will need:
 - Python 3.10+
 - `pip` for managing packages
 
-Clone the repository and install dependencies:
+Clone the repository, create a virtual environment, and install dependencies:
 
 ```bash
 git clone https://github.com/example/LanguageLearning.git
 cd LanguageLearning
+python -m venv .venv
+source .venv/bin/activate  # On Windows use: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
+
+### Dependencies
+
+This project manages packages with `requirements.txt`. Key libraries include:
+
+- `openai` for AI-driven lesson generation
+- `nltk` for basic natural language processing
+- `spacy` for advanced language processing
+- `requests` for media and API integration
+- `pytest` for running the test suite
 
 ## Usage Examples
 

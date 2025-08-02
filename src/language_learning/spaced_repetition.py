@@ -84,18 +84,40 @@ class SRSFilter:
 
     @classmethod
     def load_state(cls, path: str) -> "SRSFilter":
-        """Load review state from *path* and return a new ``SRSFilter``."""
+        """Load review state from *path* and return a new ``SRSFilter``.
 
-        with open(path, "r", encoding="utf-8") as fh:
-            data = json.load(fh)
-        ranks = {word: int(info["goal_frequency_rank"]) for word, info in data.items()}
+        If *path* does not exist an empty ``SRSFilter`` is returned.  If the
+        file cannot be parsed or is otherwise malformed a :class:`ValueError`
+        is raised with a descriptive message.
+        """
+
+        try:
+            with open(path, "r", encoding="utf-8") as fh:
+                data = json.load(fh)
+        except FileNotFoundError:
+            return cls({})
+        except json.JSONDecodeError as exc:  # pragma: no cover - defensive
+            raise ValueError(f"Invalid SRS state file {path!s}: {exc}") from exc
+        except OSError as exc:  # pragma: no cover - defensive
+            raise ValueError(f"Cannot read SRS state file {path!s}: {exc}") from exc
+
+        try:
+            ranks = {word: int(info["goal_frequency_rank"]) for word, info in data.items()}
+        except Exception as exc:  # pragma: no cover - defensive
+            raise ValueError(f"Malformed SRS state data in {path!s}: {exc}") from exc
+
         filt = cls(ranks)
-        for word, info in data.items():
-            st = filt.schedulers[word].state
-            st.repetitions = int(info["repetitions"])
-            st.interval = int(info["interval"])
-            st.efactor = float(info["efactor"])
-            st.next_review = datetime.fromisoformat(info["next_review"])
+
+        try:
+            for word, info in data.items():
+                st = filt.schedulers[word].state
+                st.repetitions = int(info["repetitions"])
+                st.interval = int(info["interval"])
+                st.efactor = float(info["efactor"])
+                st.next_review = datetime.fromisoformat(info["next_review"])
+        except Exception as exc:  # pragma: no cover - defensive
+            raise ValueError(f"Malformed SRS state data in {path!s}: {exc}") from exc
+
         return filt
 
     # ------------------------------------------------------------------

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from typing import Dict, Optional
 import json
@@ -15,7 +15,7 @@ class ReviewState:
     repetitions: int = 0
     interval: int = 0
     efactor: float = 2.5
-    next_review: datetime = datetime.now()
+    next_review: datetime = field(default_factory=datetime.now)
 
 
 class SpacedRepetitionScheduler:

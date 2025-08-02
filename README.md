@@ -55,10 +55,12 @@ from language_learning import (
 
 ## Running Tests
 
-Run the basic test suite to see the modules in action:
+This project uses [`pytest`](https://docs.pytest.org/) for its unit tests. The
+tests reside in the `tests/` directory. After installing the dependencies, run
+the entire test suite with:
 
 ```bash
-PYTHONPATH=src pytest
+pytest
 ```
 
 ## Contribution Guidelines

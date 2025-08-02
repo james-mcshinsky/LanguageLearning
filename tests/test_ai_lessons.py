@@ -23,3 +23,14 @@ def test_generate_mcq_lesson_interleaves_and_has_grammar():
     assert mcq_words == ["hola", "gracias", "adios", "por favor"]
 
     assert any(item["type"] == "grammar_tip" for item in lesson)
+
+
+def test_mcq_shuffles_and_tracks_answer():
+    import random
+
+    random.seed(0)
+    lesson = generate_mcq_lesson("greetings", new_words=["hola"], review_words=[])
+    mcq = lesson[0]
+    assert mcq["choices"][mcq["answer_index"]] == mcq["answer"]
+    assert set(mcq["choices"]) == {mcq["answer"], "hola_a", "hola_b", "hola_c"}
+    assert mcq["choices"] != [mcq["answer"], "hola_a", "hola_b", "hola_c"]

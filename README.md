@@ -2,7 +2,7 @@
 
 ## Project Description
 
-LanguageLearning provides resources and example code for building tools that make learning new languages more engaging. The repository is organized to eventually contain flashcard generators, pronunciation helpers, and interactive practice scripts.
+LanguageLearning provides resources and example code for building tools that make learning new languages more engaging. The repository now includes modular components for vocabulary extraction, spaced-repetition scheduling, AI-driven lesson generation, and basic media integration.
 
 ## Setup Requirements
 
@@ -21,13 +21,33 @@ pip install -r requirements.txt
 
 ## Usage Examples
 
-Once dependencies are installed, you can run the main script to start a practice session:
+Each module includes a small example when executed directly:
 
 ```bash
-python main.py --language spanish
+PYTHONPATH=src python -m language_learning.vocabulary
+PYTHONPATH=src python -m language_learning.spaced_repetition
+PYTHONPATH=src python -m language_learning.ai_lessons
+PYTHONPATH=src python -m language_learning.media_integration
 ```
 
-The application will guide you through vocabulary and grammar exercises in your chosen language.
+You can also import the modules in your own scripts:
+
+```python
+from language_learning import (
+    extract_vocabulary,
+    SpacedRepetitionScheduler,
+    generate_lesson,
+    suggest_media,
+)
+```
+
+## Running Tests
+
+Run the basic test suite to see the modules in action:
+
+```bash
+PYTHONPATH=src pytest
+```
 
 ## Contribution Guidelines
 
@@ -38,4 +58,3 @@ Contributions are welcome! To contribute:
 3. Submit a pull request with a clear description of your changes.
 
 Please adhere to standard coding conventions and write tests for any new functionality.
-

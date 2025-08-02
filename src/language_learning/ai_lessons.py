@@ -1,6 +1,7 @@
 """Minimal helpers for AI-driven lesson generation."""
 
 from typing import Dict, List, Optional
+import random
 
 
 def generate_lesson(topic: str, vocabulary: Optional[List[str]] = None) -> Dict[str, object]:
@@ -48,12 +49,14 @@ def generate_mcq_lesson(
     def mcq_entry(word: str) -> Dict[str, object]:
         answer = f"meaning of {word}"
         choices = [answer] + _generate_distractors(word)
+        random.shuffle(choices)
         return {
             "type": "mcq",
             "word": word,
             "question": f"What is the meaning of '{word}'?",
             "choices": choices,
             "answer": answer,
+            "answer_index": choices.index(answer),
         }
 
     def grammar_entry(word: str) -> Dict[str, str]:

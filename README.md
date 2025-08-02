@@ -6,6 +6,13 @@
 
 LanguageLearning provides resources and example code for building tools that make learning new languages more engaging. The repository now includes modular components for vocabulary extraction, spaced-repetition scheduling, AI-driven lesson generation, and basic media integration.
 
+## Repository Structure
+
+- `backend/` – TypeScript Express API server
+- `frontend/` – React web client built with Vite
+- `infra/` – Terraform configuration for AWS deployment
+- `docs/` – Additional project documentation
+
 ## Setup Requirements
 
 To get started, you will need:
@@ -62,6 +69,10 @@ the entire test suite with:
 ```bash
 pytest
 ```
+
+## Development Guide
+
+Instructions for local development, Docker usage, CI/CD, and deployment are documented in [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md).
 
 ## Contribution Guidelines
 

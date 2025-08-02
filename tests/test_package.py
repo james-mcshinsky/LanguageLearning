@@ -20,5 +20,5 @@ def test_package_exports(tmp_path):
     assert lesson["topic"] == "food"
     assert "apple" in lesson["vocabulary"]
 
-    media = suggest_media("word")
-    assert media["audio"].endswith("word.mp3")
+    media = suggest_media("word", 1)
+    assert media and media[0]["audio"].endswith("word_level2.mp3")

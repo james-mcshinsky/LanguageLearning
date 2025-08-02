@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta
 
+import pytest
+
 from language_learning.spaced_repetition import SRSFilter, SpacedRepetitionScheduler
 
 
@@ -37,3 +39,16 @@ def test_srs_filter_pop_and_persistence(tmp_path):
     filt.save_state(path)
     loaded = SRSFilter.load_state(path)
     assert loaded.pop_next_due() == "banana"
+
+
+def test_load_state_missing_file_returns_empty(tmp_path):
+    path = tmp_path / "missing.json"
+    filt = SRSFilter.load_state(path)
+    assert filt.schedulers == {}
+
+
+def test_load_state_invalid_json_raises(tmp_path):
+    path = tmp_path / "bad.json"
+    path.write_text("{not valid json", encoding="utf-8")
+    with pytest.raises(ValueError):
+        SRSFilter.load_state(path)

@@ -6,9 +6,11 @@ from language_learning import (
 )
 
 
-def test_package_exports():
+def test_package_exports(tmp_path):
     """Package-level imports should be available and functional."""
-    assert extract_vocabulary("hello world") == ["hello", "world"]
+    corpus = tmp_path / "corpus.txt"
+    corpus.write_text("hello world")
+    assert extract_vocabulary(str(corpus)) == ["hello", "world"]
 
     scheduler = SpacedRepetitionScheduler()
     first = scheduler.review(5)

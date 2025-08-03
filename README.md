@@ -95,7 +95,7 @@ simpler managed services depending on your needs.
    ```
    Push the images to a registry such as Amazon ECR or Docker Hub. For ECR, log
    in with `aws ecr get-login-password | docker login` and push the tagged
-   images. Update image tags in `infra/terraform.tfvars` if necessary.
+   images. Update image tags in `infra/terraform.tfvars` (copy from the example file) if necessary.
 
 3. **Provision infrastructure**
    ```bash
@@ -104,7 +104,7 @@ simpler managed services depending on your needs.
    terraform plan       # review changes
    terraform apply      # create or update AWS resources
    ```
-   Adjust values in `infra/terraform.tfvars` (region, domain, scaling options)
+   Adjust values in `infra/terraform.tfvars` (see `terraform.tfvars.example` for template)
    to match your environment. The Terraform code sets up an ECS Fargate cluster
    for containers, an RDS PostgreSQL instance, networking components, and an
    S3/CloudFront distribution for the front end.
@@ -150,7 +150,7 @@ simpler managed services depending on your needs.
      ```
 
 3. **Infrastructure Provisioning with Terraform**
-   - Edit `infra/terraform.tfvars` to define region, VPC CIDR blocks, database settings, and other options.
+   - Copy `infra/terraform.tfvars.example` to `infra/terraform.tfvars` and edit to define region, VPC CIDR blocks, database settings, and other options.
    - Run the following commands:
      ```bash
      cd infra

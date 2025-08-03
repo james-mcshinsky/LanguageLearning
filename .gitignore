@@ -6,3 +6,7 @@ dist/
 .env.*
 !**/.env.example
 .terraform/
+# Terraform variable files
+infra/terraform.tfvars
+infra/*.tfvars
+!infra/terraform.tfvars.example

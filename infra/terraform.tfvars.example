@@ -1,3 +1,6 @@
+# Copy this file to `terraform.tfvars` and replace example values
+# with settings for your environment before running Terraform.
+
 region               = "us-east-1"
 backend_state_bucket = "example-terraform-state"
 lock_table           = "example-terraform-locks"

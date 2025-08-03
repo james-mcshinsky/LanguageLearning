@@ -2,16 +2,16 @@ terraform {
   required_version = ">= 1.5.0"
 
   backend "s3" {
-    bucket         = "langlearn-terraform-state"
+    bucket         = var.backend_state_bucket
     key            = "terraform.tfstate"
-    region         = "us-west-2"
-    dynamodb_table = "langlearn-terraform-lock"
+    region         = var.region
+    dynamodb_table = var.lock_table
     encrypt        = true
   }
 }
 
 provider "aws" {
-  region = "us-west-2"
+  region = var.region
 }
 
 

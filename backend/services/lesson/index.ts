@@ -1,41 +1,51 @@
 import express from 'express';
-import path from 'path';
 import { runPython } from '../../shared/utils';
+import {
+  loadGoals,
+  loadReviewState,
+  saveReviewState,
+} from '../../shared/database';
 
 export function createLessonService() {
   const app = express();
   app.use(express.json());
   app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 
-  const statePath = path.join(__dirname, 'srs_state.json');
-
+  // ---------------------------------------------------------------------------
+  // Generate a lesson queue based on goals and spaced repetition state
   app.get('/queue', (_req, res) => {
+    const goals = loadGoals();
+    const review = loadReviewState();
     const code = `
 import json, sys
-from language_learning.spaced_repetition import SRSFilter
+from datetime import datetime
+from language_learning.spaced_repetition import SRSFilter, SpacedRepetitionScheduler
 from language_learning.ai_lessons import generate_mcq_lesson
-
-state_path = sys.argv[1]
-vocab = {"hola":1, "adios":2, "gracias":3, "por favor":4}
-filt = SRSFilter.load_state(state_path)
-if not filt.schedulers:
-    filt = SRSFilter(vocab)
-    filt.save_state(state_path)
-
-review_words = []
+goals=json.loads(sys.argv[1])
+review=json.loads(sys.argv[2])
+goal_ranks={g['word']: i+1 for i,g in enumerate(goals)}
+filt=SRSFilter(goal_ranks)
+for word, info in review.items():
+    st=filt.schedulers.setdefault(word, SpacedRepetitionScheduler()).state
+    st.repetitions=int(info.get('repetitions',0))
+    st.interval=int(info.get('interval',0))
+    st.efactor=float(info.get('efactor',2.5))
+    st.next_review=datetime.fromisoformat(info['next_review'])
+review_words=[]
 while True:
-    nxt = filt.pop_next_due()
+    nxt=filt.pop_next_due()
     if not nxt:
         break
     review_words.append(nxt)
-
-new_words = [w for w in vocab if w not in filt.schedulers or filt.schedulers[w].state.repetitions == 0]
-new_words = [w for w in new_words if w not in review_words][:3]
-lesson = generate_mcq_lesson("practice", new_words, review_words)
-print(json.dumps({"lesson": lesson, "words": list(dict.fromkeys(new_words + review_words))}))
+new_words=[g['word'] for g in goals if g['word'] not in review or review[g['word']].get('repetitions',0)==0]
+new_words=[w for w in new_words if w not in review_words][:3]
+lesson=generate_mcq_lesson('practice', new_words, review_words)
+print(json.dumps({'lesson': lesson, 'words': list(dict.fromkeys(new_words+review_words))}))
 `;
     try {
-      const result = runPython(code, [statePath]) || { lesson: [], words: [] };
+      const result =
+        runPython(code, [JSON.stringify(goals), JSON.stringify(review)]) ||
+        { lesson: [], words: [] };
       const queue = [...(result.lesson || [])];
       const words: string[] = result.words || [];
       words.forEach((word) => {
@@ -58,26 +68,46 @@ print(json.dumps({"lesson": lesson, "words": list(dict.fromkeys(new_words + revi
     }
   });
 
+  // Record a learner review outcome and update spaced repetition state
   app.post('/review', (req, res) => {
     const { word, quality } = req.body as { word: string; quality: number };
+    const goals = loadGoals();
+    const state = loadReviewState();
     const code = `
 import json, sys
-from language_learning.spaced_repetition import SRSFilter
-
-state_path, word, quality = sys.argv[1], sys.argv[2], int(sys.argv[3])
-filt = SRSFilter.load_state(state_path)
+from datetime import datetime
+from language_learning.spaced_repetition import SRSFilter, SpacedRepetitionScheduler
+goals=json.loads(sys.argv[1])
+state=json.loads(sys.argv[2])
+word=sys.argv[3]
+quality=int(sys.argv[4])
+goal_ranks={g['word']: i+1 for i,g in enumerate(goals)}
+filt=SRSFilter(goal_ranks)
+for w, info in state.items():
+    st=filt.schedulers.setdefault(w, SpacedRepetitionScheduler()).state
+    st.repetitions=int(info.get('repetitions',0))
+    st.interval=int(info.get('interval',0))
+    st.efactor=float(info.get('efactor',2.5))
+    st.next_review=datetime.fromisoformat(info['next_review'])
 filt.review(word, quality)
-filt.save_state(state_path)
-print(json.dumps({"next_review": filt.schedulers[word].state.next_review.isoformat()}))
+new_state={w:{'repetitions':s.state.repetitions,'interval':s.state.interval,'efactor':s.state.efactor,'next_review':s.state.next_review.isoformat()} for w,s in filt.schedulers.items()}
+print(json.dumps({'state': new_state, 'next_review': new_state[word]['next_review']}))
 `;
     try {
-      const result = runPython(code, [statePath, word, String(quality)]);
-      res.json(result);
+      const result = runPython(code, [
+        JSON.stringify(goals),
+        JSON.stringify(state),
+        word,
+        String(quality),
+      ]);
+      saveReviewState(result.state);
+      res.json({ next_review: result.next_review });
     } catch (err: any) {
       res.status(500).json({ error: err.message });
     }
   });
 
+  // AI-generated lesson content
   app.get('/lesson', (req, res) => {
     const topic = (req.query.topic as string) || '';
     const code = `
@@ -96,3 +126,4 @@ print(json.dumps(generate_lesson(topic)))
 
   return app;
 }
+

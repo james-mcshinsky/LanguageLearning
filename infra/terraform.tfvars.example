@@ -18,3 +18,4 @@ db_password = "CHANGE_ME"
 
 vpc_cidr     = "10.0.0.0/16"
 asset_bucket = "example-assets"
+data_table_name = "language-learning-data"

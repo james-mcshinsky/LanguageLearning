@@ -42,7 +42,7 @@ class BlurbIn(BaseModel):
 def create_app(storage: Optional[JSONStorage] = None) -> FastAPI:
     """Application factory used by tests and external runners."""
 
-    store = storage or JSONStorage("data.json")
+    store = storage or JSONStorage(os.environ.get("DATA_PATH", "storage.json"))
     goal_manager = GoalManager()
     for item in store.load_goals():
         goal_manager.create_goal(item)

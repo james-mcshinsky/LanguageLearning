@@ -131,6 +131,54 @@ simpler managed services depending on your needs.
    - Provision certificates with AWS Certificate Manager and reference them in
      Terraform for HTTPS support.
 
+### Full AWS Deployment Walkthrough
+
+1. **Prerequisites**
+   - Create an AWS account and set up an IAM user or role with appropriate permissions.
+   - Configure the AWS CLI with `aws configure` and ensure credentials are available as environment variables.
+   - Install Docker and Terraform on your local machine.
+
+2. **Containerization**
+   - Build and tag Docker images for the backend and frontend services.
+   - Create Amazon ECR repositories and push the images. For example:
+     ```bash
+     aws ecr create-repository --repository-name language-learning-backend
+     aws ecr create-repository --repository-name language-learning-frontend
+     docker build -t language-learning-backend ./backend
+     docker tag language-learning-backend:latest <account>.dkr.ecr.<region>.amazonaws.com/language-learning-backend:latest
+     docker push <account>.dkr.ecr.<region>.amazonaws.com/language-learning-backend:latest
+     ```
+
+3. **Infrastructure Provisioning with Terraform**
+   - Edit `infra/terraform.tfvars` to define region, VPC CIDR blocks, database settings, and other options.
+   - Run the following commands:
+     ```bash
+     cd infra
+     terraform init
+     terraform plan
+     terraform apply
+     ```
+
+4. **ECS & RDS Configuration**
+   - ECS services pull the container images from ECR and use environment variables defined in the task definitions.
+   - Connect services to the RDS database and store secrets in AWS Secrets Manager or SSM Parameter Store.
+
+5. **DNS & SSL Setup**
+   - Create a Route 53 hosted zone and point your domain to the load balancer or CloudFront distribution.
+   - Provision certificates with AWS Certificate Manager and reference them in Terraform for HTTPS.
+
+6. **Verification & Troubleshooting**
+   - Check ECS task logs and service health:
+     ```bash
+     aws logs tail /aws/ecs/language-learning-backend --follow
+     ```
+   - Run database migrations or other startup tasks as needed.
+
+7. **Automation**
+   - Set up a GitHub Actions workflow that runs tests, builds and pushes images, and triggers `terraform apply` when changes are merged into `main`.
+
+Following this walkthrough, you can deploy the application to AWS using Terraform, ECS/Fargate, RDS, Route 53, and CloudFront with optional CI/CD via GitHub Actions.
+
 ## Contribution Guidelines
 
 This project is private and does not accept external contributions.

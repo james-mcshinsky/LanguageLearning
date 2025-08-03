@@ -23,14 +23,17 @@ variable "frontend_image" {
   type        = string
 }
 
+variable "root_domain" {
   description = "Root domain for the application."
   type        = string
 }
 
+variable "hosted_zone_id" {
   description = "Route 53 hosted zone ID."
   type        = string
 }
 
+variable "certificate_arn" {
   description = "ARN of the ACM certificate for CloudFront."
   type        = string
 }

@@ -2,13 +2,14 @@ import express from 'express';
 import path from 'path';
 import fs from 'fs';
 import { runPython } from '../../shared/utils';
+import { DATA_PATH } from '../../shared/database';
 
 export function createGoalService() {
   const app = express();
   app.use(express.json());
   app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 
-  const dataPath = path.resolve(__dirname, '../../../data.json');
+  const dataPath = DATA_PATH;
 
   app.get('/goals', (_req, res) => {
     const code = `

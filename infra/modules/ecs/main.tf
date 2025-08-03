@@ -73,12 +73,6 @@ resource "aws_vpc" "this" {
   cidr_block = "10.0.0.0/16"
 }
 
-resource "aws_subnet" "this" {
-  count      = 2
-  vpc_id     = aws_vpc.this.id
-  cidr_block = cidrsubnet(aws_vpc.this.cidr_block, 8, count.index)
-}
-
 resource "aws_security_group" "service" {
   name        = "backend-sg"
   description = "Allow inbound HTTP to backend service"
@@ -100,11 +94,23 @@ resource "aws_security_group" "service" {
   }
 }
 
-resource "aws_lb" "this" {
-  name               = "backend-lb"
-  load_balancer_type = "application"
-  subnets            = aws_subnet.this[*].id
-  security_groups    = [aws_security_group.service.id]
+# Pull in all available AZs in your region
+data "aws_availability_zones" "available" {}
+
+# Create exactly two subnets, one in each of the first two AZs
+resource "aws_subnet" "this" {
+  count             = 2
+  vpc_id            = aws_vpc.this.id
+
+  # This will carve two /24s out of your /16 VPC CIDR
+  cidr_block        = cidrsubnet(var.vpc_cidr, 8, count.index)
+
+  # Assign each subnet to a different AZ
+  availability_zone = data.aws_availability_zones.available.names[count.index]
+
+  tags = {
+    Name = "${var.root_domain}-subnet-${count.index}"
+  }
 }
 
 resource "aws_lb_target_group" "this" {

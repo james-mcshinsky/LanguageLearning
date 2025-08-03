@@ -127,7 +127,9 @@ simpler managed services depending on your needs.
      - `AWS_ACCESS_KEY_ID`
      - `AWS_SECRET_ACCESS_KEY`
      - Optionally `AWS_REGION`, `ECR_REPOSITORY`, `ECS_CLUSTER`, `ECS_SERVICE`,
-       and `S3_BUCKET` to override the default values in the workflow.
+       and `S3_BUCKET` to override the default values (`us-west-2`,
+       `language-learning-backend`, `backend-cluster`, `backend-service`, and
+       `languagelearning-static-assets-jm-2025`) in the workflow.
 
 6. **Set up DNS and SSL**
    - Use Route 53 to manage your domain and create an alias record to the

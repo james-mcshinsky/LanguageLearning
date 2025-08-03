@@ -9,9 +9,9 @@ domain_name         = "example.com"
 hosted_zone_id      = "Z1234567890"
 acm_certificate_arn = "arn:aws:acm:us-east-1:123456789012:certificate/abc-123"
 
-db_name      = "languagedb"
-db_username  = "admin"
-db_password  = "CHANGE_ME"
+db_name     = "languagedb"
+db_username = "admin"
+db_password = "CHANGE_ME"
 
 vpc_cidr     = "10.0.0.0/16"
 asset_bucket = "ll-assets"

@@ -1,7 +1,11 @@
 """Minimal helpers for AI-driven lesson generation."""
 
 from typing import Dict, List, Optional
+import json
+import os
 import random
+
+import requests
 
 
 def generate_lesson(topic: str, vocabulary: Optional[List[str]] = None) -> Dict[str, object]:
@@ -23,15 +27,50 @@ def generate_lesson(topic: str, vocabulary: Optional[List[str]] = None) -> Dict[
     return lesson
 
 
-def _generate_distractors(word: str) -> List[str]:
-    """Return placeholder distractors for *word*.
+def _generate_distractors_llm(word: str) -> List[str]:
+    """Return distractors for *word* using an LLM service."""
 
-    The implementation is intentionally simple and deterministic.  A future
-    version of this project is expected to use an LLM to craft believable
-    distractors based on context.
-    """
+    endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
+    deployment = os.getenv("AZURE_OPENAI_DEPLOYMENT")
+    api_key = os.getenv("AZURE_OPENAI_API_KEY")
+    if not (endpoint and deployment and api_key):
+        raise RuntimeError("Azure OpenAI configuration missing")
+
+    url = (
+        f"{endpoint}/openai/deployments/{deployment}/chat/completions"
+        "?api-version=2025-01-01-preview"
+    )
+    prompt = (
+        "Provide three plausible but incorrect distractor answers for a "
+        f"vocabulary question about the word '{word}'. Return the answers as a "
+        "JSON array of strings."
+    )
+    res = requests.post(
+        url,
+        headers={"api-key": api_key, "Content-Type": "application/json"},
+        json={"messages": [{"role": "user", "content": prompt}]},
+        timeout=15,
+    )
+    res.raise_for_status()
+    content = res.json()["choices"][0]["message"]["content"]
+    return json.loads(content)
+
+
+def _generate_distractors_simple(word: str) -> List[str]:
+    """Deterministic placeholder distractors for *word*."""
 
     return [f"{word}_{suffix}" for suffix in ("a", "b", "c")]
+
+
+def _generate_distractors(word: str) -> List[str]:
+    """Return distractors for *word*, optionally using an LLM service."""
+
+    if os.getenv("USE_LLM_DISTRACTORS", "").lower() in {"1", "true", "yes"}:
+        try:
+            return _generate_distractors_llm(word)
+        except Exception:
+            pass
+    return _generate_distractors_simple(word)
 
 
 def generate_mcq_lesson(

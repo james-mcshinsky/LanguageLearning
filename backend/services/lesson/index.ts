@@ -9,6 +9,8 @@ import {
 export function createLessonService() {
   const app = express();
   const PY_SERVICE_URL = process.env.PY_SERVICE_URL || 'http://localhost:8000';
+  const USE_LLM_BLURB =
+    String(process.env.USE_LLM_BLURB || '').toLowerCase() === 'true';
   app.use(express.json());
   app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 
@@ -172,8 +174,33 @@ print(json.dumps(generate_lesson(topic)))
       l_plus_one_words: string[];
       length: number;
     };
+    const path = USE_LLM_BLURB ? '/blurb/llm' : '/blurb';
     try {
-      const response = await fetch(`${PY_SERVICE_URL}/blurb`, {
+      const response = await fetch(`${PY_SERVICE_URL}${path}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ known_words, l_plus_one_words, length }),
+      });
+      const data = await response.json();
+      res.json(data);
+    } catch (err: any) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
+  // Explicit LLM blurb endpoint
+  app.post('/blurb/llm', async (req, res) => {
+    const {
+      known_words = [],
+      l_plus_one_words = [],
+      length = 0,
+    } = req.body as {
+      known_words: string[];
+      l_plus_one_words: string[];
+      length: number;
+    };
+    try {
+      const response = await fetch(`${PY_SERVICE_URL}/blurb/llm`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ known_words, l_plus_one_words, length }),

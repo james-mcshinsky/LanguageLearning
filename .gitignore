@@ -5,7 +5,12 @@ dist/
 .env
 .env.*
 !**/.env.example
+
+# Terraform state
 .terraform/
+*.tfstate
+*.tfstate.backup
+
 # Terraform variable files
 infra/terraform.tfvars
 infra/*.tfvars

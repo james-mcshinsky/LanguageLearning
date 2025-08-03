@@ -91,8 +91,9 @@ simpler managed services depending on your needs.
 2. **Build and push Docker images**
    ```bash
    docker build -t language-learning-backend ./backend
-   docker build -t language-learning-frontend ./frontend
+   docker build -t language-learning-frontend --build-arg VITE_API_URL="https://backend.example.com" ./frontend
    ```
+   Replace `https://backend.example.com` with your backend's public endpoint.
    Push the images to a registry such as Amazon ECR or Docker Hub. For ECR, log
    in with `aws ecr get-login-password | docker login` and push the tagged
    images. Update image tags in `infra/terraform.tfvars` (copy from the example file) if necessary.

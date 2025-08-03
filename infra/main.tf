@@ -18,6 +18,24 @@ resource "aws_s3_bucket" "assets" {
   bucket = var.asset_bucket
 }
 
+resource "aws_s3_bucket_policy" "assets_policy" {
+  bucket = aws_s3_bucket.assets.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          AWS = module.cloudfront.oai_iam_arn
+        }
+        Action   = "s3:GetObject"
+        Resource = "${aws_s3_bucket.assets.arn}/*"
+      }
+    ]
+  })
+}
+
 resource "aws_dynamodb_table" "data" {
   name         = var.data_table_name
   billing_mode = "PAY_PER_REQUEST"
@@ -30,10 +48,10 @@ resource "aws_dynamodb_table" "data" {
 }
 
 module "cloudfront" {
-  source              = "./modules/cloudfront"
-  asset_bucket        = aws_s3_bucket.assets.bucket
-  root_domain         = var.root_domain
-  acm_certificate_arn = var.acm_certificate_arn
+  source                   = "./modules/cloudfront"
+  asset_bucket_domain_name = aws_s3_bucket.assets.bucket_regional_domain_name
+  root_domain              = var.root_domain
+  acm_certificate_arn      = var.acm_certificate_arn
 }
 
 module "ecs" {

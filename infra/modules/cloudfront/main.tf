@@ -1,14 +1,18 @@
+resource "aws_cloudfront_origin_access_identity" "oai" {
+  comment = "OAI for LanguageLearning CloudFront"
+}
+
 resource "aws_cloudfront_distribution" "this" {
   enabled             = true
   default_root_object = "index.html"
   aliases             = ["www.${var.root_domain}"]
 
   origin {
-    domain_name = "${var.asset_bucket}.s3.amazonaws.com"
+    domain_name = var.asset_bucket_domain_name
     origin_id   = "s3-origin"
 
     s3_origin_config {
-      origin_access_identity = ""
+      origin_access_identity = "origin-access-identity/cloudfront/${aws_cloudfront_origin_access_identity.oai.id}"
     }
   }
 

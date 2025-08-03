@@ -1,5 +1,5 @@
-variable "asset_bucket" {
-  description = "S3 bucket containing static assets."
+variable "asset_bucket_domain_name" {
+  description = "S3 bucket regional domain name for static assets."
   type        = string
 }
 

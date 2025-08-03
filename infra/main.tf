@@ -30,8 +30,10 @@ resource "aws_dynamodb_table" "data" {
 }
 
 module "cloudfront" {
-  source       = "./modules/cloudfront"
-  asset_bucket = aws_s3_bucket.assets.bucket
+  source              = "./modules/cloudfront"
+  asset_bucket        = aws_s3_bucket.assets.bucket
+  root_domain         = var.root_domain
+  acm_certificate_arn = var.acm_certificate_arn
 }
 
 module "ecs" {

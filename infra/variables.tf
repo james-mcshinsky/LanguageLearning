@@ -23,20 +23,6 @@ variable "frontend_image" {
   type        = string
 }
 
-variable "domain_name" {
-  description = "Root domain for the application."
-  type        = string
-}
-
-variable "hosted_zone_id" {
-  description = "Route 53 hosted zone ID."
-  type        = string
-}
-
-variable "acm_certificate_arn" {
-  description = "ARN of the ACM certificate for CloudFront."
-  type        = string
-}
 
 variable "db_name" {
   description = "Name of the RDS database."

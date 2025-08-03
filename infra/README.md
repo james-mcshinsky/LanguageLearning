@@ -29,9 +29,6 @@ terraform {
 | `lock_table` | DynamoDB table for Terraform state locking | `example-terraform-locks` |
 | `backend_image` | ECR image URI for the backend | `123456789012.dkr.ecr.us-east-1.amazonaws.com/example-backend:latest` |
 | `frontend_image` | ECR image URI for the frontend | `123456789012.dkr.ecr.us-east-1.amazonaws.com/example-frontend:latest` |
-| `domain_name` | Root domain for the application | `example.com` |
-| `hosted_zone_id` | Route 53 hosted zone ID | `ZXXXXXXXXXX` |
-| `acm_certificate_arn` | ARN of the ACM certificate for CloudFront | `arn:aws:acm:us-east-1:123456789012:certificate/EXAMPLE` |
 | `db_name` | Name of the RDS database | `exampledb` |
 | `db_username` | Username for the RDS database | `admin` |
 | `db_password` | Password for the RDS database | `CHANGE_ME` |

@@ -74,6 +74,72 @@ pytest
 
 Instructions for local development, Docker usage, CI/CD, and deployment are documented in [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md).
 
+## Deployment & Hosting
+
+This project can be deployed automatically from GitHub. The repository includes
+Terraform configuration for provisioning AWS resources, but you can also use
+simpler managed services depending on your needs.
+
+### Deploying to AWS with Terraform
+
+1. **Prerequisites**
+   - [Docker](https://www.docker.com/) for building container images.
+   - [Terraform](https://developer.hashicorp.com/terraform/downloads) installed locally.
+   - An AWS account with credentials configured in your environment
+     (`AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`).
+
+2. **Build and tag Docker images**
+   ```bash
+   docker build -t language-learning-backend ./backend
+   docker build -t language-learning-frontend ./frontend
+   ```
+   Push the images to a registry such as Amazon ECR or Docker Hub. Update image
+   tags in `infra/terraform.tfvars` if necessary.
+
+3. **Provision infrastructure**
+   ```bash
+   cd infra
+   terraform init       # download providers/modules
+   terraform plan       # review changes
+   terraform apply      # create or update AWS resources
+   ```
+   The Terraform code sets up an ECS Fargate cluster for containers, an RDS
+   PostgreSQL instance, networking components, and an S3/CloudFront distribution
+   for the front end.
+
+4. **Configure application**
+   - Store sensitive values (API keys, database URLs, etc.) in AWS Secrets
+     Manager or SSM Parameter Store and reference them in the Terraform
+     configuration.
+   - Set environment variables for the backend and any worker services in the
+     ECS task definitions.
+
+5. **Automate with GitHub Actions**
+   - Create a workflow triggered on pushes to `main` that:
+     1. Runs `pytest`.
+     2. Builds and pushes Docker images.
+     3. Executes `terraform apply` in the `infra/` directory to redeploy using
+        the new images.
+   - Store AWS credentials and registry logins as encrypted secrets in the
+     repository settings.
+
+### Alternative managed services
+
+If maintaining AWS infrastructure is more than you need, you can deploy smaller
+pieces to managed platforms that rebuild on each GitHub push:
+
+- **Frontend**: Connect `frontend/` to Vercel or Netlify for automatic builds and
+  CDN hosting.
+- **Backend and services**: Use Render, Railway, Fly.io, or Heroku. These
+  platforms can build from the `backend/` Dockerfile and provide managed
+  PostgreSQL/Redis add-ons.
+- **Database and cache**: Managed offerings such as Supabase or Neon (Postgres)
+  and Upstash (Redis) work well with the services above.
+
+Regardless of platform, define secrets in the hosting provider's dashboard and
+expose them to the application through environment variables so deployments
+remain reproducible and secure.
+
 ## Contribution Guidelines
 
 This project is private and does not accept external contributions.

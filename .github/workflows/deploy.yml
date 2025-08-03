@@ -5,11 +5,11 @@ on:
     branches: [ main ]
 
 env:
-  AWS_REGION: us-east-1               # or your region
-  ECR_REPOSITORY: my-backend-repo     # ECR repo name
-  ECS_CLUSTER: backend-cluster        # ECS cluster name
-  ECS_SERVICE: backend-service        # ECS service name
-  S3_BUCKET: my-frontend-bucket       # S3 bucket for frontend assets
+  AWS_REGION: us-west-2
+  ECR_REPOSITORY: language-learning-backend
+  ECS_CLUSTER: backend-cluster
+  ECS_SERVICE: backend-service
+  S3_BUCKET: languagelearning-static-assets-jm-2025
 
 jobs:
   deploy:

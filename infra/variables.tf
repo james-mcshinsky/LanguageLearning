@@ -33,7 +33,7 @@ variable "hosted_zone_id" {
   type        = string
 }
 
-variable "certificate_arn" {
+variable "acm_certificate_arn" {
   description = "ARN of the ACM certificate for CloudFront."
   type        = string
 }

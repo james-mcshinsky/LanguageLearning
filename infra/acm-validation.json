@@ -1,0 +1,12 @@
+{
+  "Comment": "ACM DNS validation for fluentmilestones.com",
+  "Changes": [{
+    "Action": "UPSERT",
+    "ResourceRecordSet": {
+      "Name": "_90f388f2b83b5700824adeaac764b896.www.fluentmilestones.com.",
+      "Type": "CNAME",
+      "TTL": 300,
+      "ResourceRecords": [{ "Value": "_df9bdc0ae5ab2e099c0714ad2c128db6.xlfgrmvvlj.acm-validations.aws." }]
+    }
+  }]
+}

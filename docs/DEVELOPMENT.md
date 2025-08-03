@@ -94,3 +94,18 @@ terraform apply
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) configured (`aws configure`).
 - [Terraform](https://developer.hashicorp.com/terraform/downloads) installed locally.
 - Optional: S3 bucket and DynamoDB table for Terraform remote state locking.
+
+## Python service integration
+
+Some learning features are implemented in Python and exposed through a
+FastAPI microservice located in `src/language_learning/api.py`. Start the
+service locally with:
+
+```bash
+uvicorn language_learning.api:app --reload --port 8000
+```
+
+Node-based services communicate with this process via HTTP (configure the
+`PY_SERVICE_URL` environment variable if the service is not on
+`http://localhost:8000`). The lesson service then exposes endpoints under
+`/lesson` such as `/vocabulary`, `/prompts`, and `/blurb` for the front-end.

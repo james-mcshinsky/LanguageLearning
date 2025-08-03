@@ -17,3 +17,29 @@ export async function apiClient(endpoint, { method = 'GET', body, headers } = {}
   }
   return response.json();
 }
+
+export const fetchVocabulary = (corpus) =>
+  apiClient('/lesson/vocabulary', {
+    method: 'POST',
+    body: { corpus },
+  });
+
+export const fetchLessonPrompts = (topic, newWords = [], reviewWords = []) =>
+  apiClient('/lesson/prompts', {
+    method: 'POST',
+    body: { topic, new_words: newWords, review_words: reviewWords },
+  });
+
+export const generateBlurb = (
+  knownWords = [],
+  lPlusOneWords = [],
+  length = 0,
+) =>
+  apiClient('/lesson/blurb', {
+    method: 'POST',
+    body: {
+      known_words: knownWords,
+      l_plus_one_words: lPlusOneWords,
+      length,
+    },
+  });

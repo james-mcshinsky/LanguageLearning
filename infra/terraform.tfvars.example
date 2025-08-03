@@ -8,10 +8,6 @@ lock_table           = "example-terraform-locks"
 backend_image  = "123456789012.dkr.ecr.us-east-1.amazonaws.com/example-backend:latest"
 frontend_image = "123456789012.dkr.ecr.us-east-1.amazonaws.com/example-frontend:latest"
 
-domain_name         = "example.com"
-hosted_zone_id      = "ZXXXXXXXXXX"
-acm_certificate_arn = "arn:aws:acm:us-east-1:123456789012:certificate/EXAMPLE"
-
 db_name     = "exampledb"
 db_username = "admin"
 db_password = "CHANGE_ME"

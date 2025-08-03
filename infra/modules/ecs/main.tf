@@ -135,7 +135,8 @@ resource "aws_route_table_association" "public" {
 }
 
 resource "aws_lb" "this" {
-  name               = "${var.root_domain}-lb"
+  # replace dots with hyphens so the LB name is valid
+  name               = "${replace(var.root_domain, ".", "-")}-lb"
   load_balancer_type = "application"
   subnets            = aws_subnet.this[*].id
   security_groups    = [aws_security_group.service.id]

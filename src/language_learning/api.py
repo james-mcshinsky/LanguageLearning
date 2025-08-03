@@ -90,6 +90,16 @@ def create_app(storage: Optional[JSONStorage] = None) -> FastAPI:
         )
         return {"blurb": text}
 
+    @app.post("/blurb/llm")
+    def blurb_llm(data: BlurbIn):
+        text = generate_blurb(
+            data.known_words,
+            data.l_plus_one_words,
+            data.length,
+            use_llm=True,
+        )
+        return {"blurb": text}
+
     @app.get("/media")
     def media(word: str, level: int):
         return suggest_media(word, level)

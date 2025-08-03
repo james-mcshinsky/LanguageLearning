@@ -70,7 +70,7 @@ resource "aws_ecs_task_definition" "backend" {
 }
 
 resource "aws_vpc" "this" {
-  cidr_block = "10.0.0.0/16"
+  cidr_block = var.vpc_cidr
 }
 
 resource "aws_subnet" "this" {
@@ -101,7 +101,7 @@ resource "aws_security_group" "service" {
 }
 
 resource "aws_lb" "this" {
-  name               = "backend-lb"
+  name               = "${var.root_domain}-lb"
   load_balancer_type = "application"
   subnets            = aws_subnet.this[*].id
   security_groups    = [aws_security_group.service.id]

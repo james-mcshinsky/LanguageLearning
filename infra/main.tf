@@ -35,9 +35,11 @@ module "cloudfront" {
 }
 
 module "ecs" {
-  source        = "./modules/ecs"
+  source          = "./modules/ecs"
   backend_image   = var.backend_image
   region          = var.region
   data_table_name = aws_dynamodb_table.data.name
   data_table_arn  = aws_dynamodb_table.data.arn
+  vpc_cidr        = var.vpc_cidr
+  root_domain     = var.root_domain
 }

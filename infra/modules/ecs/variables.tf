@@ -17,3 +17,13 @@ variable "data_table_arn" {
   description = "ARN of the DynamoDB table for application data."
   type        = string
 }
+
+variable "vpc_cidr" {
+  description = "CIDR block for the VPC (passed from root)."
+  type        = string
+}
+
+variable "root_domain" {
+  description = "Apex domain (passed from root) for naming and tags."
+  type        = string
+}

@@ -114,7 +114,7 @@ resource "aws_subnet" "this" {
 }
 
 resource "aws_lb" "this" {
-  name               = "${var.root_domain}-lb"
+  name               = "${replace(var.root_domain, ".", "-")}-lb"
   load_balancer_type = "application"
   subnets            = aws_subnet.this[*].id
   security_groups    = [aws_security_group.service.id]

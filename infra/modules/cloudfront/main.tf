@@ -1,6 +1,7 @@
 resource "aws_cloudfront_distribution" "this" {
   enabled             = true
   default_root_object = "index.html"
+  aliases             = ["www.${var.root_domain}"]
 
   origin {
     domain_name = "${var.asset_bucket}.s3.amazonaws.com"
@@ -34,6 +35,8 @@ resource "aws_cloudfront_distribution" "this" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = true
+    acm_certificate_arn      = var.acm_certificate_arn
+    ssl_support_method       = "sni-only"
+    minimum_protocol_version = "TLSv1.2_2018"
   }
 }

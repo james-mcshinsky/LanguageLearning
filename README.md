@@ -118,19 +118,36 @@ simpler managed services depending on your needs.
      ECS task definitions.
 
 5. **Automate with GitHub Actions**
-   - Create a workflow triggered on pushes to `main` that:
-     1. Runs `pytest`.
-     2. Builds and pushes Docker images.
-     3. Executes `terraform apply` in the `infra/` directory to redeploy using
-        the new images.
-   - Store AWS credentials and registry logins as encrypted secrets in the
-     repository settings.
+   - This repository includes `.github/workflows/deploy.yml`, which builds the
+     backend and frontend, pushes the backend image to Amazon ECR, forces a new
+     ECS deployment, and uploads the compiled frontend to S3 whenever changes
+     are pushed to `main`.
+   - Define the following repository secrets so the workflow can authenticate
+     with AWS:
+     - `AWS_ACCESS_KEY_ID`
+     - `AWS_SECRET_ACCESS_KEY`
+     - Optionally `AWS_REGION`, `ECR_REPOSITORY`, `ECS_CLUSTER`, `ECS_SERVICE`,
+       and `S3_BUCKET` to override the default values in the workflow.
 
 6. **Set up DNS and SSL**
    - Use Route 53 to manage your domain and create an alias record to the
      CloudFront distribution or load balancer.
    - Provision certificates with AWS Certificate Manager and reference them in
      Terraform for HTTPS support.
+
+### Continuous Deployment to AWS
+
+Pushing to the `main` branch triggers the GitHub Actions workflow at
+`.github/workflows/deploy.yml`. The workflow:
+
+1. Checks out the repository and configures AWS credentials.
+2. Builds the backend Docker image, pushes it to ECR, and forces ECS to deploy
+   the new image.
+3. Builds the frontend bundle and uploads it to the specified S3 bucket.
+
+Customize environment variables in the workflow file or override them with
+repository secrets to match your AWS resources. When secrets and variables are
+set correctly, each commit to `main` results in a fresh deployment to AWS.
 
 ### Full AWS Deployment Walkthrough
 

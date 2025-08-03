@@ -70,7 +70,7 @@ resource "aws_ecs_task_definition" "backend" {
 }
 
 resource "aws_vpc" "this" {
-  cidr_block = "10.0.0.0/16"
+  cidr_block = var.vpc_cidr
 }
 
 resource "aws_security_group" "service" {
@@ -99,11 +99,11 @@ data "aws_availability_zones" "available" {}
 
 # Create exactly two subnets, one in each of the first two AZs
 resource "aws_subnet" "this" {
-  count             = 2
-  vpc_id            = aws_vpc.this.id
+  count  = 2
+  vpc_id = aws_vpc.this.id
 
   # This will carve two /24s out of your /16 VPC CIDR
-  cidr_block        = cidrsubnet(var.vpc_cidr, 8, count.index)
+  cidr_block = cidrsubnet(var.vpc_cidr, 8, count.index)
 
   # Assign each subnet to a different AZ
   availability_zone = data.aws_availability_zones.available.names[count.index]
@@ -111,6 +111,13 @@ resource "aws_subnet" "this" {
   tags = {
     Name = "${var.root_domain}-subnet-${count.index}"
   }
+}
+
+resource "aws_lb" "this" {
+  name               = "${var.root_domain}-lb"
+  load_balancer_type = "application"
+  subnets            = aws_subnet.this[*].id
+  security_groups    = [aws_security_group.service.id]
 }
 
 resource "aws_lb_target_group" "this" {

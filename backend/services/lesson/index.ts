@@ -8,6 +8,7 @@ import {
 
 export function createLessonService() {
   const app = express();
+  const PY_SERVICE_URL = process.env.PY_SERVICE_URL || 'http://localhost:8000';
   app.use(express.json());
   app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 
@@ -119,6 +120,66 @@ print(json.dumps(generate_lesson(topic)))
     try {
       const lesson = runPython(code, [topic]);
       res.json(lesson);
+    } catch (err: any) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
+  // Bridge to Python service for vocabulary extraction
+  app.post('/vocabulary', async (req, res) => {
+    const { corpus } = req.body as { corpus: string };
+    try {
+      const response = await fetch(`${PY_SERVICE_URL}/vocabulary`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ corpus }),
+      });
+      const data = await response.json();
+      res.json(data);
+    } catch (err: any) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
+  // Bridge to Python service for lesson prompts
+  app.post('/prompts', async (req, res) => {
+    const { topic, new_words = [], review_words = [] } = req.body as {
+      topic: string;
+      new_words: string[];
+      review_words: string[];
+    };
+    try {
+      const response = await fetch(`${PY_SERVICE_URL}/lesson/prompts`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ topic, new_words, review_words }),
+      });
+      const data = await response.json();
+      res.json(data);
+    } catch (err: any) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
+  // Bridge to Python service for blurb generation
+  app.post('/blurb', async (req, res) => {
+    const {
+      known_words = [],
+      l_plus_one_words = [],
+      length = 0,
+    } = req.body as {
+      known_words: string[];
+      l_plus_one_words: string[];
+      length: number;
+    };
+    try {
+      const response = await fetch(`${PY_SERVICE_URL}/blurb`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ known_words, l_plus_one_words, length }),
+      });
+      const data = await response.json();
+      res.json(data);
     } catch (err: any) {
       res.status(500).json({ error: err.message });
     }

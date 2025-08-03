@@ -3,20 +3,40 @@
 from __future__ import annotations
 
 from dataclasses import asdict
-from typing import Optional
+import os
+from tempfile import NamedTemporaryFile
+from typing import List, Optional
 
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-from .ai_lessons import generate_lesson
+from .ai_lessons import generate_lesson, generate_mcq_lesson
+from .ai_blurbs import generate_blurb
 from .goals import GoalItem, GoalManager
 from .media_integration import suggest_media
 from .storage import JSONStorage
+from .vocabulary import extract_vocabulary
 
 
 class GoalIn(BaseModel):
     word: str
     weight: float = 1.0
+
+
+class VocabularyIn(BaseModel):
+    corpus: str
+
+
+class LessonPromptsIn(BaseModel):
+    topic: str
+    new_words: List[str] = []
+    review_words: List[str] = []
+
+
+class BlurbIn(BaseModel):
+    known_words: List[str] = []
+    l_plus_one_words: List[str] = []
+    length: int = 0
 
 
 def create_app(storage: Optional[JSONStorage] = None) -> FastAPI:
@@ -43,6 +63,32 @@ def create_app(storage: Optional[JSONStorage] = None) -> FastAPI:
     @app.get("/lesson")
     def lesson(topic: str):
         return generate_lesson(topic)
+
+    @app.post("/lesson/prompts")
+    def lesson_prompts(data: LessonPromptsIn):
+        prompts = generate_mcq_lesson(
+            data.topic, data.new_words, data.review_words
+        )
+        return {"prompts": prompts}
+
+    @app.post("/vocabulary")
+    def vocabulary(data: VocabularyIn):
+        with NamedTemporaryFile("w+", encoding="utf-8", delete=False) as tmp:
+            tmp.write(data.corpus)
+            tmp.flush()
+            path = tmp.name
+        try:
+            words = extract_vocabulary(path)
+        finally:
+            os.unlink(path)
+        return {"vocabulary": words}
+
+    @app.post("/blurb")
+    def blurb(data: BlurbIn):
+        text = generate_blurb(
+            data.known_words, data.l_plus_one_words, data.length
+        )
+        return {"blurb": text}
 
     @app.get("/media")
     def media(word: str, level: int):

@@ -19,11 +19,11 @@ variable "data_table_arn" {
 }
 
 variable "vpc_cidr" {
+  description = "CIDR block for the VPC (provided by root module)"
   type        = string
-  description = "CIDR block for the VPC (injected from root module)"
 }
 
 variable "root_domain" {
+  description = "Apex/root domain for naming (provided by root module)"
   type        = string
-  description = "Root/apex domain (injected from root module) for naming"
 }

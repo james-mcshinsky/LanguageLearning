@@ -41,6 +41,7 @@ module "ecs" {
   data_table_name = aws_dynamodb_table.data.name
   data_table_arn  = aws_dynamodb_table.data.arn
 
+  # inject the VPC CIDR and root domain into the module
   vpc_cidr    = var.vpc_cidr
   root_domain = var.root_domain
 }

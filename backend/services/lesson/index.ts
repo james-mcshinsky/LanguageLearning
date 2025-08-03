@@ -16,9 +16,9 @@ export function createLessonService() {
 
   // ---------------------------------------------------------------------------
   // Generate a lesson queue based on goals and spaced repetition state
-  app.get('/queue', (_req, res) => {
-    const goals = loadGoals();
-    const review = loadReviewState();
+  app.get('/queue', async (_req, res) => {
+    const goals = await loadGoals();
+    const review = await loadReviewState();
     const code = `
 import json, sys
 from datetime import datetime
@@ -72,10 +72,10 @@ print(json.dumps({'lesson': lesson, 'words': list(dict.fromkeys(new_words+review
   });
 
   // Record a learner review outcome and update spaced repetition state
-  app.post('/review', (req, res) => {
+  app.post('/review', async (req, res) => {
     const { word, quality } = req.body as { word: string; quality: number };
-    const goals = loadGoals();
-    const state = loadReviewState();
+    const goals = await loadGoals();
+    const state = await loadReviewState();
     const code = `
 import json, sys
 from datetime import datetime
@@ -103,7 +103,7 @@ print(json.dumps({'state': new_state, 'next_review': new_state[word]['next_revie
         word,
         String(quality),
       ]);
-      saveReviewState(result.state);
+      await saveReviewState(result.state);
       res.json({ next_review: result.next_review });
     } catch (err: any) {
       res.status(500).json({ error: err.message });

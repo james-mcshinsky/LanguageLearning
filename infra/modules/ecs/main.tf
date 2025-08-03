@@ -22,6 +22,24 @@ resource "aws_iam_role_policy_attachment" "execution" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
+resource "aws_iam_role" "task" {
+  name               = "backend-task-role"
+  assume_role_policy = data.aws_iam_policy_document.task_assume.json
+}
+
+data "aws_iam_policy_document" "dynamodb" {
+  statement {
+    actions   = ["dynamodb:GetItem", "dynamodb:PutItem", "dynamodb:UpdateItem"]
+    resources = [var.data_table_arn]
+  }
+}
+
+resource "aws_iam_role_policy" "task_dynamo" {
+  name   = "backend-dynamodb-access"
+  role   = aws_iam_role.task.id
+  policy = data.aws_iam_policy_document.dynamodb.json
+}
+
 resource "aws_ecs_task_definition" "backend" {
   family                   = "backend"
   network_mode             = "awsvpc"
@@ -29,12 +47,17 @@ resource "aws_ecs_task_definition" "backend" {
   cpu                      = 256
   memory                   = 512
   execution_role_arn       = aws_iam_role.task_execution.arn
+  task_role_arn            = aws_iam_role.task.arn
 
   container_definitions = jsonencode([
     {
       name      = "backend"
       image     = var.backend_image
       essential = true
+      environment = [
+        { name = "DATA_TABLE", value = var.data_table_name },
+        { name = "AWS_REGION", value = var.region }
+      ]
       portMappings = [
         {
           containerPort = 8000

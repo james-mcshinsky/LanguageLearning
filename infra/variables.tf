@@ -63,3 +63,8 @@ variable "asset_bucket" {
   description = "S3 bucket name for static assets."
   type        = string
 }
+
+variable "data_table_name" {
+  description = "DynamoDB table name for application data."
+  type        = string
+}

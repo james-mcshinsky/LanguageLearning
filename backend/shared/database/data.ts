@@ -1,46 +1,34 @@
-import fs from 'fs';
-import path from 'path';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocumentClient, GetCommand, PutCommand } from '@aws-sdk/lib-dynamodb';
 
-export const DATA_PATH = path.resolve(__dirname, '../../../data.json');
+const TABLE_NAME = process.env.DATA_TABLE || 'language-learning-data';
+const dynamo = DynamoDBDocumentClient.from(new DynamoDBClient({}));
 
-interface DataFile {
-  goals: { word: string; weight?: number }[];
-  review_state: Record<string, any>;
+const GOALS_KEY = 'goals';
+const REVIEW_KEY = 'review_state';
+
+export async function loadGoals() {
+  const res = await dynamo.send(
+    new GetCommand({ TableName: TABLE_NAME, Key: { pk: GOALS_KEY } }),
+  );
+  return Array.isArray(res.Item?.data) ? res.Item!.data : [];
 }
 
-function readFile(): DataFile {
-  try {
-    const raw = fs.readFileSync(DATA_PATH, 'utf-8');
-    const data = JSON.parse(raw);
-    return {
-      goals: Array.isArray(data.goals) ? data.goals : [],
-      review_state: data.review_state || {},
-    };
-  } catch {
-    return { goals: [], review_state: {} };
-  }
+export async function saveGoals(goals: { word: string; weight?: number }[]) {
+  await dynamo.send(
+    new PutCommand({ TableName: TABLE_NAME, Item: { pk: GOALS_KEY, data: goals } }),
+  );
 }
 
-function writeFile(data: DataFile) {
-  fs.writeFileSync(DATA_PATH, JSON.stringify(data));
+export async function loadReviewState() {
+  const res = await dynamo.send(
+    new GetCommand({ TableName: TABLE_NAME, Key: { pk: REVIEW_KEY } }),
+  );
+  return res.Item?.data || {};
 }
 
-export function loadGoals() {
-  return readFile().goals;
-}
-
-export function saveGoals(goals: { word: string; weight?: number }[]) {
-  const data = readFile();
-  data.goals = goals;
-  writeFile(data);
-}
-
-export function loadReviewState() {
-  return readFile().review_state;
-}
-
-export function saveReviewState(state: Record<string, any>) {
-  const data = readFile();
-  data.review_state = state;
-  writeFile(data);
+export async function saveReviewState(state: Record<string, any>) {
+  await dynamo.send(
+    new PutCommand({ TableName: TABLE_NAME, Item: { pk: REVIEW_KEY, data: state } }),
+  );
 }

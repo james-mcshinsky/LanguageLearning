@@ -11,17 +11,17 @@ export function createGoalService() {
 
   // ---------------------------------------------------------------------------
   // Basic CRUD for goals stored in the shared JSON data file
-  app.get('/goals', (_req, res) => {
+  app.get('/goals', async (_req, res) => {
     try {
-      res.json({ goals: loadGoals() });
+      res.json({ goals: await loadGoals() });
     } catch (err: any) {
       res.status(500).json({ error: err.message });
     }
   });
 
-  app.get('/goals/:word', (req, res) => {
+  app.get('/goals/:word', async (req, res) => {
     try {
-      const goals = loadGoals();
+      const goals = await loadGoals();
       const goal = goals.find((g) => g.word === req.params.word);
       if (!goal) {
         return res.status(404).json({ error: 'goal not found' });
@@ -32,41 +32,43 @@ export function createGoalService() {
     }
   });
 
-  app.post('/goals', (req, res) => {
+  app.post('/goals', async (req, res) => {
     const { word, weight } = req.body as { word?: string; weight?: number };
     if (!word) {
       return res.status(400).json({ error: 'word required' });
     }
     try {
-      const goals = loadGoals();
+      const goals = await loadGoals();
       goals.push({ word, weight });
-      saveGoals(goals);
+      await saveGoals(goals);
       res.status(201).json({ goals });
     } catch (err: any) {
       res.status(500).json({ error: err.message });
     }
   });
 
-  app.put('/goals/:word', (req, res) => {
+  app.put('/goals/:word', async (req, res) => {
     const { weight } = req.body as { weight?: number };
     try {
-      const goals = loadGoals();
+      const goals = await loadGoals();
       const goal = goals.find((g) => g.word === req.params.word);
       if (!goal) {
         return res.status(404).json({ error: 'goal not found' });
       }
       goal.weight = weight;
-      saveGoals(goals);
+      await saveGoals(goals);
       res.json({ goals });
     } catch (err: any) {
       res.status(500).json({ error: err.message });
     }
   });
 
-  app.delete('/goals/:word', (req, res) => {
+  app.delete('/goals/:word', async (req, res) => {
     try {
-      const goals = loadGoals().filter((g) => g.word !== req.params.word);
-      saveGoals(goals);
+      const goals = (await loadGoals()).filter(
+        (g) => g.word !== req.params.word,
+      );
+      await saveGoals(goals);
       res.status(204).send();
     } catch (err: any) {
       res.status(500).json({ error: err.message });
@@ -74,15 +76,15 @@ export function createGoalService() {
   });
 
   // Bulk creation of goals
-  app.post('/goals/bulk', (req, res) => {
+  app.post('/goals/bulk', async (req, res) => {
     const { items } = req.body as { items: { word: string; weight?: number }[] };
     if (!Array.isArray(items)) {
       return res.status(400).json({ error: 'items array required' });
     }
     try {
-      const goals = loadGoals();
+      const goals = await loadGoals();
       items.forEach((g) => goals.push({ word: g.word, weight: g.weight }));
-      saveGoals(goals);
+      await saveGoals(goals);
       res.status(201).json({ goals });
     } catch (err: any) {
       res.status(500).json({ error: err.message });
@@ -90,13 +92,12 @@ export function createGoalService() {
   });
 
   // Extract vocabulary from provided text using Python helper
-  app.post('/goals/extract', (req, res) => {
+  app.post('/goals/extract', async (req, res) => {
     const { text } = req.body as { text?: string };
     if (!text) {
       return res.status(400).json({ error: 'text required' });
     }
-
-    const goals = loadGoals();
+    const goals = await loadGoals();
     const tempPath = path.resolve(__dirname, '../../../tmp_corpus.txt');
     fs.writeFileSync(tempPath, text, 'utf-8');
     const code = `

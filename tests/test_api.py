@@ -6,7 +6,7 @@ from language_learning.storage import JSONStorage
 
 
 def _make_client(tmp_path):
-    storage = JSONStorage(tmp_path / "data.json")
+    storage = JSONStorage(tmp_path / "store.json")
     app = create_app(storage)
     return TestClient(app), storage
 

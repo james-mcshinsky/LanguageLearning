@@ -8,10 +8,10 @@ export function createAnalyticsService() {
   app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 
   // Overall progress: number of learned words vs total goals
-  app.get('/progress', (_req, res) => {
+  app.get('/progress', async (_req, res) => {
     try {
-      const goals = loadGoals();
-      const review = loadReviewState();
+      const goals = await loadGoals();
+      const review = await loadReviewState();
       res.json({ learned: Object.keys(review).length, total: goals.length });
     } catch (err: any) {
       res.status(500).json({ error: err.message });
@@ -19,10 +19,10 @@ export function createAnalyticsService() {
   });
 
   // Per-goal progress details used by goal views
-  app.get('/goals', (_req, res) => {
+  app.get('/goals', async (_req, res) => {
     try {
-      const goals = loadGoals();
-      const review = loadReviewState();
+      const goals = await loadGoals();
+      const review = await loadReviewState();
       const items = goals.map((g) => ({
         ...g,
         nextReview: review[g.word]?.next_review || null,
@@ -35,9 +35,9 @@ export function createAnalyticsService() {
   });
 
   // Next five review items based on spaced repetition state
-  app.get('/reviews/next', (_req, res) => {
-    const goals = loadGoals();
-    const review = loadReviewState();
+  app.get('/reviews/next', async (_req, res) => {
+    const goals = await loadGoals();
+    const review = await loadReviewState();
     const code = `
 import json, sys
 from datetime import datetime

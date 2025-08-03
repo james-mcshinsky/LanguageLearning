@@ -33,6 +33,21 @@ export function createAuthService() {
     res.json({ users: users.map(({ password, ...rest }) => rest) });
   });
 
+  app.put('/users/:id', (req, res) => {
+    const id = Number(req.params.id);
+    const { username, password } = req.body as {
+      username?: string;
+      password?: string;
+    };
+    const user = users.find((u) => u.id === id);
+    if (!user) {
+      return res.status(404).json({ error: 'user not found' });
+    }
+    if (username) user.username = username;
+    if (password) user.password = password;
+    res.json({ id: user.id, username: user.username });
+  });
+
   app.delete('/users/:id', (req, res) => {
     const id = Number(req.params.id);
     const idx = users.findIndex((u) => u.id === id);

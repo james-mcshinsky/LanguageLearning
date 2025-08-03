@@ -1,6 +1,6 @@
 import express from 'express';
 import { runPython } from '../../shared/utils';
-import { DATA_PATH } from '../../shared/database';
+import { loadGoals, loadReviewState } from '../../shared/database';
 
 export function createAnalyticsService() {
   const app = express();
@@ -9,17 +9,26 @@ export function createAnalyticsService() {
 
   // Overall progress: number of learned words vs total goals
   app.get('/progress', (_req, res) => {
-    const code = `
-import json, sys
-from language_learning.storage import JSONStorage
-store=JSONStorage(sys.argv[1])
-goals=store.load_goals()
-review=store.load_review_state()
-print(json.dumps({"learned": len(review), "total": len(goals)}))
-`;
     try {
-      const result = runPython(code, [DATA_PATH]);
-      res.json(result);
+      const goals = loadGoals();
+      const review = loadReviewState();
+      res.json({ learned: Object.keys(review).length, total: goals.length });
+    } catch (err: any) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
+  // Per-goal progress details used by goal views
+  app.get('/goals', (_req, res) => {
+    try {
+      const goals = loadGoals();
+      const review = loadReviewState();
+      const items = goals.map((g) => ({
+        ...g,
+        nextReview: review[g.word]?.next_review || null,
+        reviewed: !!review[g.word],
+      }));
+      res.json({ goals: items });
     } catch (err: any) {
       res.status(500).json({ error: err.message });
     }
@@ -27,15 +36,15 @@ print(json.dumps({"learned": len(review), "total": len(goals)}))
 
   // Next five review items based on spaced repetition state
   app.get('/reviews/next', (_req, res) => {
+    const goals = loadGoals();
+    const review = loadReviewState();
     const code = `
 import json, sys
 from datetime import datetime
-from language_learning.storage import JSONStorage
 from language_learning.spaced_repetition import SRSFilter, SpacedRepetitionScheduler
-store=JSONStorage(sys.argv[1])
-goals=store.load_goals()
-review=store.load_review_state()
-goal_ranks={g.word: i+1 for i,g in enumerate(goals)}
+goals=json.loads(sys.argv[1])
+review=json.loads(sys.argv[2])
+goal_ranks={g['word']: i+1 for i,g in enumerate(goals)}
 filt=SRSFilter(goal_ranks)
 for word, info in review.items():
     st=filt.schedulers.setdefault(word, SpacedRepetitionScheduler()).state
@@ -50,10 +59,13 @@ for _ in range(5):
         break
     next_words.append(nxt)
     del filt.schedulers[nxt]
-print(json.dumps({"next": next_words}))
+print(json.dumps({'next': next_words}))
 `;
     try {
-      const result = runPython(code, [DATA_PATH]);
+      const result = runPython(code, [
+        JSON.stringify(goals),
+        JSON.stringify(review),
+      ]);
       res.json(result);
     } catch (err: any) {
       res.status(500).json({ error: err.message });

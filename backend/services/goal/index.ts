@@ -1,104 +1,73 @@
 import express from 'express';
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
 import { runPython } from '../../shared/utils';
-import { DATA_PATH } from '../../shared/database';
+import { loadGoals, saveGoals } from '../../shared/database';
 
 export function createGoalService() {
   const app = express();
   app.use(express.json());
   app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 
-  const dataPath = DATA_PATH;
-
+  // ---------------------------------------------------------------------------
+  // Basic CRUD for goals stored in the shared JSON data file
   app.get('/goals', (_req, res) => {
-    const code = `
-import json, sys
-from language_learning.storage import JSONStorage
-from language_learning.goals import GoalManager
-from dataclasses import asdict
-store=JSONStorage(sys.argv[1])
-manager=GoalManager()
-for item in store.load_goals():
-    manager.create_goal(item)
-print(json.dumps({"goals": [asdict(g) for g in manager.list_goals()]}))
-`;
     try {
-      const result = runPython(code, [dataPath]);
-      res.json(result);
+      res.json({ goals: loadGoals() });
+    } catch (err: any) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
+  app.get('/goals/:word', (req, res) => {
+    try {
+      const goals = loadGoals();
+      const goal = goals.find((g) => g.word === req.params.word);
+      if (!goal) {
+        return res.status(404).json({ error: 'goal not found' });
+      }
+      res.json(goal);
     } catch (err: any) {
       res.status(500).json({ error: err.message });
     }
   });
 
   app.post('/goals', (req, res) => {
-    const { word, weight } = req.body;
+    const { word, weight } = req.body as { word?: string; weight?: number };
     if (!word) {
       return res.status(400).json({ error: 'word required' });
     }
-    const code = `
-import json, sys
-from language_learning.storage import JSONStorage
-from language_learning.goals import GoalManager, GoalItem
-from dataclasses import asdict
-store=JSONStorage(sys.argv[1])
-manager=GoalManager()
-for item in store.load_goals():
-    manager.create_goal(item)
-manager.create_goal(GoalItem(sys.argv[2], float(sys.argv[3])))
-store.save_goals(manager.list_goals())
-print(json.dumps({"goals": [asdict(g) for g in manager.list_goals()]}))
-`;
     try {
-      const result = runPython(code, [dataPath, word, String(weight ?? 1)]);
-      res.status(201).json(result);
+      const goals = loadGoals();
+      goals.push({ word, weight });
+      saveGoals(goals);
+      res.status(201).json({ goals });
     } catch (err: any) {
       res.status(500).json({ error: err.message });
     }
   });
 
   app.put('/goals/:word', (req, res) => {
-    const { word } = req.params;
-    const { weight } = req.body;
-    const code = `
-import json, sys
-from language_learning.storage import JSONStorage
-from language_learning.goals import GoalManager
-from dataclasses import asdict
-store=JSONStorage(sys.argv[1])
-manager=GoalManager()
-for item in store.load_goals():
-    manager.create_goal(item)
-manager.update_goal(sys.argv[2], float(sys.argv[3]))
-store.save_goals(manager.list_goals())
-print(json.dumps({"goals": [asdict(g) for g in manager.list_goals()]}))
-`;
+    const { weight } = req.body as { weight?: number };
     try {
-      const result = runPython(code, [dataPath, word, String(weight ?? 1)]);
-      res.json(result);
+      const goals = loadGoals();
+      const goal = goals.find((g) => g.word === req.params.word);
+      if (!goal) {
+        return res.status(404).json({ error: 'goal not found' });
+      }
+      goal.weight = weight;
+      saveGoals(goals);
+      res.json({ goals });
     } catch (err: any) {
       res.status(500).json({ error: err.message });
     }
   });
 
   app.delete('/goals/:word', (req, res) => {
-    const { word } = req.params;
-    const code = `
-import json, sys
-from language_learning.storage import JSONStorage
-from language_learning.goals import GoalManager
-from dataclasses import asdict
-store=JSONStorage(sys.argv[1])
-manager=GoalManager()
-for item in store.load_goals():
-    manager.create_goal(item)
-manager.delete_goal(sys.argv[2])
-store.save_goals(manager.list_goals())
-print(json.dumps({"goals": [asdict(g) for g in manager.list_goals()]}))
-`;
     try {
-      const result = runPython(code, [dataPath, word]);
-      res.json(result);
+      const goals = loadGoals().filter((g) => g.word !== req.params.word);
+      saveGoals(goals);
+      res.status(204).send();
     } catch (err: any) {
       res.status(500).json({ error: err.message });
     }
@@ -110,51 +79,40 @@ print(json.dumps({"goals": [asdict(g) for g in manager.list_goals()]}))
     if (!Array.isArray(items)) {
       return res.status(400).json({ error: 'items array required' });
     }
-    const code = `
-import json, sys
-from language_learning.storage import JSONStorage
-from language_learning.goals import GoalManager, GoalItem
-from dataclasses import asdict
-store=JSONStorage(sys.argv[1])
-manager=GoalManager()
-for item in store.load_goals():
-    manager.create_goal(item)
-payload=json.loads(sys.argv[2])
-for entry in payload:
-    manager.create_goal(GoalItem(entry['word'], float(entry.get('weight',1))))
-store.save_goals(manager.list_goals())
-print(json.dumps({"goals": [asdict(g) for g in manager.list_goals()]}))
-`;
     try {
-      const result = runPython(code, [dataPath, JSON.stringify(items)]);
-      res.status(201).json(result);
+      const goals = loadGoals();
+      items.forEach((g) => goals.push({ word: g.word, weight: g.weight }));
+      saveGoals(goals);
+      res.status(201).json({ goals });
     } catch (err: any) {
       res.status(500).json({ error: err.message });
     }
   });
 
-  // Extract vocabulary from provided text
+  // Extract vocabulary from provided text using Python helper
   app.post('/goals/extract', (req, res) => {
     const { text } = req.body as { text?: string };
     if (!text) {
       return res.status(400).json({ error: 'text required' });
     }
+
+    const goals = loadGoals();
     const tempPath = path.resolve(__dirname, '../../../tmp_corpus.txt');
     fs.writeFileSync(tempPath, text, 'utf-8');
     const code = `
 import json, sys
-from language_learning.storage import JSONStorage
-from language_learning.goals import GoalManager
+from language_learning.goals import GoalManager, GoalItem
 from language_learning.vocabulary import extract_vocabulary
-store=JSONStorage(sys.argv[1])
+goals=json.loads(sys.argv[1])
+path=sys.argv[2]
 manager=GoalManager()
-for item in store.load_goals():
-    manager.create_goal(item)
-vocab=extract_vocabulary(sys.argv[2], manager)
-print(json.dumps({"vocab": vocab}))
+for g in goals:
+    manager.create_goal(GoalItem(g['word'], float(g.get('weight',1))))
+vocab=extract_vocabulary(path, manager)
+print(json.dumps({'vocab': vocab}))
 `;
     try {
-      const result = runPython(code, [dataPath, tempPath]);
+      const result = runPython(code, [JSON.stringify(goals), tempPath]);
       fs.unlinkSync(tempPath);
       res.json(result);
     } catch (err: any) {
@@ -169,3 +127,4 @@ print(json.dumps({"vocab": vocab}))
 
   return app;
 }
+

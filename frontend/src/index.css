@@ -38,4 +38,24 @@
   .active {
     @apply bg-white/10 text-inverse;
   }
+
+  .site-header {
+    @apply bg-secondary text-primary p-md flex justify-between items-center;
+  }
+
+  .page-content {
+    @apply w-full;
+  }
+
+  .sidebar {
+    @apply border-r border-white/10 p-md bg-secondary fixed inset-y-0 left-0 w-64 transform transition-transform duration-300 ease-in-out md:static md:w-auto md:block;
+  }
+
+  .skill-path {
+    @apply p-md overflow-y-auto;
+  }
+
+  .site-footer {
+    @apply bg-secondary text-primary p-md text-center;
+  }
 }

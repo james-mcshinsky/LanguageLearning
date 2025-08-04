@@ -47,7 +47,9 @@ def test_lesson_and_media_endpoints(tmp_path):
 
     resp = client.get("/lesson", params={"topic": "travel"})
     assert resp.status_code == 200
-    assert resp.json()["topic"] == "travel"
+    data = resp.json()
+    assert data["topic"] == "travel"
+    assert data["vocabulary"] == get_top_coca_words()
 
     resp = client.get("/media", params={"word": "you", "level": 1})
     assert resp.status_code == 200
@@ -55,10 +57,25 @@ def test_lesson_and_media_endpoints(tmp_path):
     assert items and all(item["level"] == 2 for item in items)
 
 
+def test_lesson_prompts_default_words(tmp_path):
+    client, _ = _make_client(tmp_path)
+
+    resp = client.post("/lesson/prompts", json={"topic": "basics"})
+    assert resp.status_code == 200
+    prompts = resp.json()["prompts"]
+    mcq_words = [p["word"] for p in prompts if p["type"] == "mcq"]
+    expected: list[str] = []
+    for w in get_top_coca_words():
+        expected.extend([w, w])
+    assert mcq_words == expected
+
+
 def test_blurb_defaults_to_coca(tmp_path):
     client, _ = _make_client(tmp_path)
 
-    resp = client.post("/blurb", json={"length": 3})
+    resp = client.post(
+        "/blurb", json={"known_words": [], "l_plus_one_words": [], "length": 3}
+    )
     assert resp.status_code == 200
     words = resp.json()["blurb"].split()
     assert words == get_top_coca_words(3)

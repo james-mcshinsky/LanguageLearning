@@ -71,6 +71,16 @@
     font-weight: var(--font-weight-regular);
     line-height: 1.4;
   }
+
+  a {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  a:hover,
+  a:focus {
+    text-decoration: underline;
+  }
 }
 
 @layer components {

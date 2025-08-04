@@ -76,7 +76,9 @@ def _generate_distractors(word: str) -> List[str]:
 
 
 def generate_mcq_lesson(
-    topic: str, new_words: List[str], review_words: List[str]
+    topic: str,
+    new_words: list[str] | None = None,
+    review_words: list[str] | None = None,
 ) -> List[Dict[str, object]]:
     """Return a sequence of MCQ prompts and grammar micro-lessons.
 
@@ -84,8 +86,15 @@ def generate_mcq_lesson(
     and review vocabulary and simple grammar tips.  Each word yields an MCQ
     followed by a grammar hint.  ``new_words`` and ``review_words`` are
     interleaved so that learners constantly revisit prior material while
-    encountering new vocabulary.
+    encountering new vocabulary.  If either list is missing or empty,
+    ``get_top_coca_words`` is used as a fallback so the lesson always has
+    material to draw from.
     """
+
+    if not new_words:
+        new_words = get_top_coca_words()
+    if not review_words:
+        review_words = get_top_coca_words()
 
     def mcq_entry(word: str) -> Dict[str, object]:
         answer = f"meaning of {word}"

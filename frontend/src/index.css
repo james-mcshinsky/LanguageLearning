@@ -21,3 +21,9 @@
   --accent-secondary: #c53030;
   --text-inverse: #ffffff;
 }
+
+@layer components {
+  .active {
+    @apply bg-white/10 text-inverse;
+  }
+}

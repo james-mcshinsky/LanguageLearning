@@ -4,14 +4,7 @@ import Sidebar from './Sidebar.jsx';
 import { useTheme } from '../context/ThemeContext.jsx';
 import Button from './ui/Button';
 
-const navItems = [
-  { path: '/', label: 'Onboarding' },
-  { path: '/dashboard', label: 'Dashboard' },
-  { path: '/learn', label: 'Learn' },
-  { path: '/media', label: 'Media' },
-  { path: '/goals', label: 'Goals' },
-  { path: '/analytics', label: 'Analytics' },
-];
+const navItems = [{ path: '/dashboard', label: 'Dashboard' }];
 
 export default function Layout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);

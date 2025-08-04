@@ -5,7 +5,7 @@ export default function Learn() {
   const [queue, setQueue] = useState([]);
   const [index, setIndex] = useState(0);
   const [input, setInput] = useState('');
-  const [feedback, setFeedback] = useState('');
+  const [feedback, setFeedback] = useState({ message: '', isCorrect: null });
 
   useEffect(() => {
     async function load() {
@@ -39,14 +39,15 @@ export default function Learn() {
 
   const handleMCQ = (choiceIdx) => {
     const correct = choiceIdx === current.answer_index;
-    setFeedback(
-      correct
+    setFeedback({
+      message: correct
         ? 'Correct!'
-        : `Incorrect. Answer: ${current.choices[current.answer_index]}`
-    );
+        : `Incorrect. Answer: ${current.choices[current.answer_index]}`,
+      isCorrect: correct,
+    });
     sendReview(current.word, correct ? 5 : 2);
     setTimeout(() => {
-      setFeedback('');
+      setFeedback({ message: '', isCorrect: null });
       next();
     }, 1000);
   };
@@ -54,20 +55,26 @@ export default function Learn() {
   const handleFillBlank = () => {
     const correct =
       input.trim().toLowerCase() === current.answer.toLowerCase();
-    setFeedback(correct ? 'Correct!' : `Incorrect. Answer: ${current.answer}`);
+    setFeedback({
+      message: correct ? 'Correct!' : `Incorrect. Answer: ${current.answer}`,
+      isCorrect: correct,
+    });
     sendReview(current.word, correct ? 5 : 2);
     setTimeout(() => {
-      setFeedback('');
+      setFeedback({ message: '', isCorrect: null });
       next();
     }, 1000);
   };
 
   const handleMatchingDrop = (opt) => {
     const correct = opt === current.answer;
-    setFeedback(correct ? 'Correct!' : `Incorrect. Answer: ${current.answer}`);
+    setFeedback({
+      message: correct ? 'Correct!' : `Incorrect. Answer: ${current.answer}`,
+      isCorrect: correct,
+    });
     sendReview(current.word, correct ? 5 : 2);
     setTimeout(() => {
-      setFeedback('');
+      setFeedback({ message: '', isCorrect: null });
       next();
     }, 1000);
   };
@@ -153,7 +160,13 @@ export default function Learn() {
         </div>
       )}
 
-      {feedback && <p className="mt-4">{feedback}</p>}
+      {feedback.message && (
+        <p
+          className={`mt-4 ${feedback.isCorrect ? 'text-accent-primary' : 'text-accent-secondary'}`}
+        >
+          {feedback.message}
+        </p>
+      )}
     </div>
   );
 }

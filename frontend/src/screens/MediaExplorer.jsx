@@ -96,7 +96,7 @@ export default function MediaExplorer() {
           value={level}
           onChange={(e) => setLevel(Number(e.target.value))}
         />
-        <button className="px-2 py-1 bg-blue-500 text-white" onClick={fetchMedia}>
+        <button className="px-2 py-1 bg-accent-primary text-inverse" onClick={fetchMedia}>
           Load
         </button>
       </div>
@@ -104,27 +104,27 @@ export default function MediaExplorer() {
       {item && (
         <div className="space-y-2">
           <div className="flex space-x-2">
-            <button onClick={prev} className="px-2 py-1 bg-gray-200">
+            <button onClick={prev} className="px-2 py-1 bg-secondary">
               Prev
             </button>
-            <button onClick={next} className="px-2 py-1 bg-gray-200">
+            <button onClick={next} className="px-2 py-1 bg-secondary">
               Next
             </button>
             <button
               onClick={() => setShowCaptions((v) => !v)}
-              className="px-2 py-1 bg-gray-200"
+              className="px-2 py-1 bg-secondary"
             >
               {showCaptions ? 'Hide Captions' : 'Show Captions'}
             </button>
             <button
               onClick={() => setFontSize((s) => Math.max(8, s - 2))}
-              className="px-2 py-1 bg-gray-200"
+              className="px-2 py-1 bg-secondary"
             >
               A-
             </button>
             <button
               onClick={() => setFontSize((s) => s + 2)}
-              className="px-2 py-1 bg-gray-200"
+              className="px-2 py-1 bg-secondary"
             >
               A+
             </button>
@@ -179,7 +179,7 @@ export default function MediaExplorer() {
             <span>{blurbLength} words</span>
           </div>
           <button
-            className="px-2 py-1 bg-green-500 text-white"
+            className="px-2 py-1 bg-accent-primary text-inverse"
             onClick={generateBlurb}
           >
             Generate

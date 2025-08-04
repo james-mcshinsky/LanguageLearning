@@ -20,6 +20,16 @@
   --text-h3: 1.5rem;
   --text-h2: 2rem;
   --text-h1: 2.5rem;
+  --color-primary: #FFBF32;
+  --color-primary-light: #FFF7D3;
+  --color-accent: #1EC6F2;
+  --color-bg: #F6F6F6;
+  --color-surface: #FFFFFF;
+  --color-text-primary: #0F0F0F;
+  --color-text-secondary: #5D5D5D;
+  --color-success: #529917;
+  --color-danger: #C53030;
+  --color-inverse: #FFFFFF;
 }
 
 @layer base {
@@ -28,6 +38,8 @@
     font-size: var(--text-base);
     font-weight: var(--font-weight-regular);
     line-height: 1.6;
+    color: var(--color-text-primary);
+    background-color: var(--color-bg);
   }
 
   h1 {
@@ -58,33 +70,13 @@
   }
 }
 
-:root[data-theme="light"] {
-  --bg-primary: #ffffff;
-  --text-primary: #1a202c;
-  --text-secondary: #4a5568;
-  --bg-secondary: #e2e8f0;
-  --accent-primary: #276749;
-  --accent-secondary: #c53030;
-  --text-inverse: #ffffff;
-}
-
-:root[data-theme="dark"] {
-  --bg-primary: #1a202c;
-  --text-primary: #edf2f7;
-  --text-secondary: #a0aec0;
-  --bg-secondary: #2d3748;
-  --accent-primary: #276749;
-  --accent-secondary: #c53030;
-  --text-inverse: #ffffff;
-}
-
 @layer components {
   .active {
     @apply bg-white/10 text-inverse;
   }
 
   .site-header {
-    @apply bg-secondary text-primary p-md flex justify-between items-center;
+    @apply bg-surface text-text p-md flex justify-between items-center;
   }
 
   .page-content {
@@ -92,7 +84,7 @@
   }
 
   .sidebar {
-    @apply border-r border-white/10 p-md bg-secondary fixed inset-y-0 left-0 w-64 transform transition-transform duration-300 ease-in-out md:static md:w-auto md:block;
+    @apply border-r border-white/10 p-md bg-surface fixed inset-y-0 left-0 w-64 transform transition-transform duration-300 ease-in-out md:static md:w-auto md:block;
   }
 
   .skill-path {
@@ -100,6 +92,6 @@
   }
 
   .site-footer {
-    @apply bg-secondary text-primary p-md text-center;
+    @apply bg-surface text-text p-md text-center;
   }
 }

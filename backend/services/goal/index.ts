@@ -1,5 +1,6 @@
 import express from 'express';
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 import { runPython } from '../../shared/utils';
 import { loadGoals, saveGoals } from '../../shared/database';
@@ -98,22 +99,26 @@ export function createGoalService() {
       return res.status(400).json({ error: 'text required' });
     }
     const goals = await loadGoals();
-    const tempPath = path.resolve(__dirname, '../../../tmp_corpus.txt');
-    fs.writeFileSync(tempPath, text, 'utf-8');
+    let tempDir: string | undefined;
     try {
+      tempDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'corpus-'));
+      const tempPath = path.join(tempDir, 'corpus.txt');
+      await fs.promises.writeFile(tempPath, text, 'utf-8');
       const result = await runPython(
         'language_learning.entrypoints',
         ['vocabulary', JSON.stringify(goals), tempPath],
       );
-      fs.unlinkSync(tempPath);
       res.json(result);
     } catch (err: any) {
-      try {
-        fs.unlinkSync(tempPath);
-      } catch {
-        /* ignore */
-      }
       res.status(500).json({ error: err.message });
+    } finally {
+      if (tempDir) {
+        try {
+          await fs.promises.rm(tempDir, { recursive: true, force: true });
+        } catch {
+          /* ignore */
+        }
+      }
     }
   });
 

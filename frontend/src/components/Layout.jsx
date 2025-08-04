@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import Sidebar from './Sidebar.jsx';
 import Button from './ui/Button';
 import UserSettings from './UserSettings.jsx';
@@ -32,6 +33,12 @@ export default function Layout({ children }) {
             <span className="block w-6 h-0.5 bg-current" />
           </Button>
         </div>
+        <NavLink
+          to="/onboarding"
+          className="button-secondary focus:outline focus:outline-2 focus:outline-offset-2"
+        >
+          Onboarding
+        </NavLink>
         <Button
           type="button"
           onClick={() => setSettingsOpen(true)}

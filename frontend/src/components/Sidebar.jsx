@@ -48,18 +48,6 @@ export default function Sidebar() {
           </li>
           <li>
             <NavLink
-              to="/onboarding"
-              className={({ isActive }) =>
-                `block px-xs py-xxs rounded hover:bg-white/5 focus:bg-white/5 focus:outline-none ${
-                  isActive ? 'active' : ''
-                }`
-              }
-            >
-              Onboarding
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
               to="/goals"
               className={({ isActive }) =>
                 `block px-xs py-xxs rounded hover:bg-white/5 focus:bg-white/5 focus:outline-none ${

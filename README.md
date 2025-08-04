@@ -38,6 +38,14 @@ This project manages packages with `requirements.txt`. Key libraries include:
 - `requests` for media and API integration
 - `pytest` for running the test suite
 
+## Environment Configuration
+
+Backend services and Python helpers read secrets from environment variables.
+Copy `backend/.env.example` to `backend/.env` and provide values such as
+`AZURE_OPENAI_API_KEY`, `AZURE_OPENAI_ENDPOINT`, and `AZURE_OPENAI_DEPLOYMENT`.
+The frontend can load `VITE_API_URL` from `frontend/.env` (see
+`frontend/.env.example`) to point at your backend.
+
 ## Usage Examples
 
 Each module includes a small example when executed directly:

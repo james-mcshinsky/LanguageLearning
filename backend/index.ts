@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { createAuthService } from './services/auth';
 import { createGoalService } from './services/goal';
 import { createLessonService } from './services/lesson';

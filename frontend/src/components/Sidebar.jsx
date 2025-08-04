@@ -38,16 +38,10 @@ export default function Sidebar() {
             {error}
           </p>
         )}
-        <dl className="space-y-1" aria-live="polite">
-          <div className="flex justify-between">
-            <dt>Streak</dt>
-            <dd>{stats.streak}</dd>
-          </div>
-          <div className="flex justify-between">
-            <dt>Lingots</dt>
-            <dd>{stats.lingots}</dd>
-          </div>
-        </dl>
+        <div className="space-y-1" aria-live="polite">
+          <div className="streak">🔥 {stats.streak}</div>
+          <div className="lingots">💎 {stats.lingots}</div>
+        </div>
       </div>
     </div>
   );

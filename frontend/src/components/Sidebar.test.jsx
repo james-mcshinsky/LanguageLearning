@@ -23,12 +23,11 @@ describe('Sidebar', () => {
     const { container } = render(<Sidebar />);
     expect(fetch).toHaveBeenCalledWith('/api/user/stats');
     await waitFor(() => {
-      expect(screen.getByText('Streak')).toBeInTheDocument();
-      expect(screen.getByText('3')).toBeInTheDocument();
-      expect(screen.getByText('Lingots')).toBeInTheDocument();
-      expect(screen.getByText('7')).toBeInTheDocument();
+      expect(screen.getByText('Stats')).toBeInTheDocument();
+      expect(screen.getByText('🔥 3')).toBeInTheDocument();
+      expect(screen.getByText('💎 7')).toBeInTheDocument();
     });
-    const dl = container.querySelector('dl');
-    expect(dl).toHaveAttribute('aria-live', 'polite');
+    const statsContainer = container.querySelector('[aria-live="polite"]');
+    expect(statsContainer).toBeInTheDocument();
   });
 });

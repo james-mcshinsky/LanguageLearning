@@ -20,8 +20,8 @@ export default function Layout({ children }) {
   const toggleSidebar = () => setSidebarOpen((open) => !open);
 
   return (
-    <div className="min-h-screen grid grid-rows-[auto,1fr] md:grid-cols-[16rem,1fr] grid-cols-1">
-      <header className="bg-secondary text-primary p-md flex justify-between items-center md:col-span-2">
+    <div className="min-h-screen grid grid-rows-[auto,1fr,auto]">
+      <header className="site-header">
         <div className="flex items-center space-x-lg">
           <Button
             type="button"
@@ -60,16 +60,21 @@ export default function Layout({ children }) {
           Toggle Theme
         </Button>
       </header>
-      <aside
-        className={`border-r border-white/10 p-md bg-secondary fixed inset-y-0 left-0 w-64 transform transition-transform duration-300 ease-in-out ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        } md:static md:translate-x-0 md:w-auto md:block`}
-      >
-        <Sidebar />
-      </aside>
-      <main className="p-md overflow-y-auto">
+      <main className="page-content grid md:grid-cols-[16rem,1fr]">
+        <aside
+          className={`sidebar ${sidebarOpen ? '' : '-translate-x-full'} md:translate-x-0`}
+        >
+          <Sidebar />
+        </aside>
         <section className="skill-path">{children}</section>
       </main>
+      <footer className="site-footer">
+        <nav className="flex justify-center space-x-md">
+          <a href="#">About</a>
+          <a href="#">Contact</a>
+          <a href="#">Privacy</a>
+        </nav>
+      </footer>
     </div>
   );
 }

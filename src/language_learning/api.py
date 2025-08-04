@@ -8,6 +8,7 @@ from tempfile import NamedTemporaryFile
 from typing import List, Optional
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 from .ai_lessons import generate_lesson, generate_mcq_lesson
@@ -53,6 +54,16 @@ def create_app(storage: Optional[JSONStorage] = None) -> FastAPI:
         goal_manager.create_goal(item)
 
     app = FastAPI()
+    # Allow cross-origin requests so the frontend can access the API from a
+    # different domain during development or deployment. This mirrors common
+    # FastAPI setups and avoids "Access Denied" errors triggered by browsers
+    # enforcing CORS.
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
     @app.post("/goals")
     def add_goal(goal: GoalIn):

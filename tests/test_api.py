@@ -79,3 +79,19 @@ def test_blurb_defaults_to_coca(tmp_path):
     assert resp.status_code == 200
     words = resp.json()["blurb"].split()
     assert words == get_top_coca_words(3)
+
+
+def test_cors_headers(tmp_path):
+    """The API should expose permissive CORS headers for browser clients."""
+    client, _ = _make_client(tmp_path)
+
+    resp = client.options(
+        "/media",
+        headers={
+            "Origin": "http://example.com",
+            "Access-Control-Request-Method": "GET",
+        },
+    )
+    assert resp.status_code == 200
+    # Ensure the CORS middleware set the appropriate header
+    assert resp.headers.get("access-control-allow-origin") == "*"

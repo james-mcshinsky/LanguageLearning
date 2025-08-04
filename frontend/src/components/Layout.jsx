@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import Sidebar from './Sidebar.jsx';
-import { useTheme } from '../context/ThemeContext.jsx';
 import Button from './ui/Button';
+import UserSettings from './UserSettings.jsx';
 
 const navItems = [{ path: '/dashboard', label: 'Dashboard' }];
 
 export default function Layout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { toggleTheme } = useTheme();
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const toggleSidebar = () => setSidebarOpen((open) => !open);
 
@@ -46,13 +46,31 @@ export default function Layout({ children }) {
         </div>
         <Button
           type="button"
-          onClick={toggleTheme}
-          aria-label="Toggle theme"
+          onClick={() => setSettingsOpen(true)}
+          aria-label="Open settings"
           variant="secondary"
         >
-          Toggle Theme
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="w-6 h-6"
+          >
+            <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.088c1.543.94 1.031 3.28-.772 3.58a1.724 1.724 0 000 3.03c1.803.3 2.315 2.64.772 3.58a1.724 1.724 0 00-2.573 1.089c-.426 1.755-2.924 1.755-3.35 0a1.724 1.724 0 00-2.573-1.09c-1.543-.939-1.031-3.279.772-3.579a1.724 1.724 0 000-3.031c-1.803-.3-2.315-2.64-.772-3.58a1.724 1.724 0 002.573-1.088z" />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
         </Button>
       </header>
+      {settingsOpen && (
+        <UserSettings
+          open={settingsOpen}
+          onClose={() => setSettingsOpen(false)}
+        />
+      )}
       <main className="page-content grid md:grid-cols-[16rem,1fr]">
         <aside
           className={`sidebar ${sidebarOpen ? '' : '-translate-x-full'} md:translate-x-0`}

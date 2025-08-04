@@ -8,6 +8,7 @@ export default function Learn() {
   const [queue, setQueue] = useState([]);
   const [index, setIndex] = useState(0);
   const [input, setInput] = useState('');
+  const [selectedMatch, setSelectedMatch] = useState('');
   const [feedback, setFeedback] = useState({ message: '', isCorrect: null });
   const [animateFeedback, setAnimateFeedback] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -45,6 +46,7 @@ export default function Learn() {
 
   const next = () => {
     setInput('');
+    setSelectedMatch('');
     setIndex((i) => i + 1);
   };
 
@@ -85,7 +87,7 @@ export default function Learn() {
     }, 1000);
   };
 
-  const handleMatchingDrop = (opt) => {
+  const handleMatchingAnswer = (opt) => {
     const correct = opt === current.answer;
     showFeedback(
       correct ? 'Correct!' : `Incorrect. Answer: ${current.answer}`,
@@ -175,8 +177,10 @@ export default function Learn() {
 
       {current.type === 'matching' && (
         <Card className="mt-s">
-          <p>Drag the word to its match:</p>
-          <div className="flex space-x-4 mt-2">
+          <p id="match-instructions">
+            Drag the word to its match or select an answer below:
+          </p>
+          <div className="flex space-x-4 mt-2" aria-describedby="match-instructions">
             <div
               draggable
               onDragStart={(e) =>
@@ -190,12 +194,44 @@ export default function Learn() {
               <div
                 key={opt}
                 onDragOver={(e) => e.preventDefault()}
-                onDrop={() => handleMatchingDrop(opt)}
+                onDrop={() => handleMatchingAnswer(opt)}
                 className="p-2 border rounded"
               >
                 {opt}
               </div>
             ))}
+          </div>
+          <div className="mt-4">
+            <label htmlFor="match-select" className="block">
+              Choose the correct match for {current.word}
+            </label>
+            <Input
+              as="select"
+              id="match-select"
+              value={selectedMatch}
+              onChange={(e) => setSelectedMatch(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && selectedMatch) {
+                  handleMatchingAnswer(selectedMatch);
+                }
+              }}
+              className="mt-xs"
+            >
+              <option value="">Select an option</option>
+              {current.options.map((opt) => (
+                <option key={opt} value={opt}>
+                  {opt}
+                </option>
+              ))}
+            </Input>
+            <Button
+              onClick={() => handleMatchingAnswer(selectedMatch)}
+              disabled={!selectedMatch}
+              className="ml-xs mt-xs"
+              variant="outline"
+            >
+              Submit
+            </Button>
           </div>
         </Card>
       )}

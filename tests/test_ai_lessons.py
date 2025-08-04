@@ -1,10 +1,16 @@
 from language_learning.ai_lessons import generate_lesson, generate_mcq_lesson
+from language_learning.vocabulary import get_top_coca_words
 
 
 def test_generate_lesson():
     lesson = generate_lesson("food", ["apple"])
     assert lesson["topic"] == "food"
     assert "apple" in lesson["vocabulary"]
+
+
+def test_generate_lesson_defaults_to_coca_words():
+    lesson = generate_lesson("travel")
+    assert lesson["vocabulary"] == get_top_coca_words()
 
 
 def test_generate_mcq_lesson_interleaves_and_has_grammar():

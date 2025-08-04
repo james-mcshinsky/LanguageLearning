@@ -7,6 +7,7 @@ import Learn from '../screens/Learn.jsx';
 import MediaExplorer from '../screens/MediaExplorer.jsx';
 import GoalView from '../screens/GoalView.jsx';
 import MyVocabulary from '../screens/MyVocabulary.jsx';
+import NotFound from '../screens/NotFound.jsx';
 
 export default function AppNavigator() {
   return (
@@ -20,6 +21,7 @@ export default function AppNavigator() {
           <Route path="/media" element={<MediaExplorer />} />
           <Route path="/goals" element={<GoalView />} />
           <Route path="/vocabulary" element={<MyVocabulary />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Layout>
     </Router>

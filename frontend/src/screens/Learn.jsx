@@ -6,6 +6,7 @@ export default function Learn() {
   const [index, setIndex] = useState(0);
   const [input, setInput] = useState('');
   const [feedback, setFeedback] = useState({ message: '', isCorrect: null });
+  const [animateFeedback, setAnimateFeedback] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -44,17 +45,24 @@ export default function Learn() {
     setIndex((i) => i + 1);
   };
 
+  const showFeedback = (message, correct) => {
+    setFeedback({ message, isCorrect: correct });
+    setAnimateFeedback(false);
+    setTimeout(() => setAnimateFeedback(true), 0);
+  };
+
   const handleMCQ = (choiceIdx) => {
     const correct = choiceIdx === current.answer_index;
-    setFeedback({
-      message: correct
+    showFeedback(
+      correct
         ? 'Correct!'
         : `Incorrect. Answer: ${current.choices[current.answer_index]}`,
-      isCorrect: correct,
-    });
+      correct
+    );
     sendReview(current.word, correct ? 5 : 2);
     setTimeout(() => {
       setFeedback({ message: '', isCorrect: null });
+      setAnimateFeedback(false);
       next();
     }, 1000);
   };
@@ -62,26 +70,28 @@ export default function Learn() {
   const handleFillBlank = () => {
     const correct =
       input.trim().toLowerCase() === current.answer.toLowerCase();
-    setFeedback({
-      message: correct ? 'Correct!' : `Incorrect. Answer: ${current.answer}`,
-      isCorrect: correct,
-    });
+    showFeedback(
+      correct ? 'Correct!' : `Incorrect. Answer: ${current.answer}`,
+      correct
+    );
     sendReview(current.word, correct ? 5 : 2);
     setTimeout(() => {
       setFeedback({ message: '', isCorrect: null });
+      setAnimateFeedback(false);
       next();
     }, 1000);
   };
 
   const handleMatchingDrop = (opt) => {
     const correct = opt === current.answer;
-    setFeedback({
-      message: correct ? 'Correct!' : `Incorrect. Answer: ${current.answer}`,
-      isCorrect: correct,
-    });
+    showFeedback(
+      correct ? 'Correct!' : `Incorrect. Answer: ${current.answer}`,
+      correct
+    );
     sendReview(current.word, correct ? 5 : 2);
     setTimeout(() => {
       setFeedback({ message: '', isCorrect: null });
+      setAnimateFeedback(false);
       next();
     }, 1000);
   };
@@ -203,11 +213,21 @@ export default function Learn() {
       )}
 
       {feedback.message && (
-        <p
-          className={`mt-4 ${feedback.isCorrect ? 'text-accent-primary' : 'text-accent-secondary'}`}
+        <div
+          key={index}
+          className={`mt-4 flex items-center p-2 rounded transition-all duration-300 transform ${
+            animateFeedback
+              ? 'opacity-100 translate-y-0'
+              : 'opacity-0 -translate-y-2'
+          } ${
+            feedback.isCorrect ? 'bg-accent-primary' : 'bg-accent-secondary'
+          } text-inverse`}
         >
-          {feedback.message}
-        </p>
+          <span className="mr-2" aria-hidden="true">
+            {feedback.isCorrect ? '✅' : '❌'}
+          </span>
+          <span>{feedback.message}</span>
+        </div>
       )}
     </div>
   );

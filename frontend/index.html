@@ -1,12 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Language Learning</title>
 </head>
-<body class="min-h-screen bg-gray-50">
+<body class="min-h-screen bg-bg text-text">
+  <button id="theme-toggle" class="p-2 border">Toggle Theme</button>
   <div id="root"></div>
+  <script>
+    const root = document.documentElement;
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    if (!prefersDark.matches) {
+      root.dataset.theme = 'light';
+    }
+    prefersDark.addEventListener('change', (e) => {
+      root.dataset.theme = e.matches ? 'dark' : 'light';
+    });
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    });
+  </script>
   <script type="module" src="/src/main.jsx"></script>
 </body>
 </html>

@@ -26,6 +26,7 @@ export default function Layout({ children }) {
             type="button"
             onClick={toggleSidebar}
             aria-label="Toggle navigation"
+            aria-expanded={sidebarOpen}
             className="p-2 rounded md:hidden hover:bg-white/5 focus:bg-white/5 focus:outline-none"
           >
             <span className="block w-6 h-0.5 bg-current" />
@@ -58,9 +59,9 @@ export default function Layout({ children }) {
         </button>
       </header>
       <aside
-        className={`border-r border-white/10 p-4 ${
-          sidebarOpen ? 'block' : 'hidden'
-        } md:block`}
+        className={`border-r border-white/10 p-4 bg-secondary fixed inset-y-0 left-0 w-64 transform transition-transform duration-300 ease-in-out ${
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        } md:static md:translate-x-0 md:w-auto md:block`}
       >
         <Sidebar />
       </aside>

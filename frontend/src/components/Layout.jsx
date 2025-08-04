@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Sidebar from './Sidebar.jsx';
 
 const navItems = [
   { path: '/', label: 'Onboarding' },
@@ -18,9 +19,9 @@ export default function Layout({ children }) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <nav className="bg-secondary text-primary p-4 flex justify-between items-center">
-        <div className="flex space-x-4">
+    <div className="min-h-screen grid grid-rows-[auto,1fr] grid-cols-[16rem,1fr]">
+      <header className="bg-secondary text-primary p-4 flex justify-between items-center col-span-2">
+        <nav className="flex space-x-4">
           {navItems.map((item) => (
             <Link
               key={item.path}
@@ -30,7 +31,7 @@ export default function Layout({ children }) {
               {item.label}
             </Link>
           ))}
-        </div>
+        </nav>
         <button
           type="button"
           onClick={handleToggle}
@@ -39,8 +40,13 @@ export default function Layout({ children }) {
         >
           Toggle Theme
         </button>
-      </nav>
-      <main className="flex-1 p-4">{children}</main>
+      </header>
+      <aside className="border-r border-white/10 p-4">
+        <Sidebar />
+      </aside>
+      <main className="p-4 overflow-y-auto">
+        <section className="skill-path">{children}</section>
+      </main>
     </div>
   );
 }

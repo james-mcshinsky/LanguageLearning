@@ -30,6 +30,17 @@ def test_goal_setup_and_persistence(tmp_path):
     assert any(g["word"] == "hello" and not g.get("is_default") for g in data["goals"])
 
 
+def test_create_app_loads_default_goals(tmp_path):
+    """Ensure the application loads bundled COCA goals on first run."""
+    client, _ = _make_client(tmp_path)
+
+    resp = client.get("/goals")
+    assert resp.status_code == 200
+    goals = resp.json()["goals"]
+    assert len(goals) == 650
+    assert all(g.get("is_default") for g in goals)
+
+
 def test_lesson_and_media_endpoints(tmp_path):
     client, _ = _make_client(tmp_path)
 

@@ -6,7 +6,6 @@ import Dashboard from '../screens/Dashboard.jsx';
 import Learn from '../screens/Learn.jsx';
 import MediaExplorer from '../screens/MediaExplorer.jsx';
 import GoalView from '../screens/GoalView.jsx';
-import Analytics from '../screens/Analytics.jsx';
 import MyVocabulary from '../screens/MyVocabulary.jsx';
 
 export default function AppNavigator() {
@@ -21,7 +20,6 @@ export default function AppNavigator() {
           <Route path="/media" element={<MediaExplorer />} />
           <Route path="/goals" element={<GoalView />} />
           <Route path="/vocabulary" element={<MyVocabulary />} />
-          <Route path="/analytics" element={<Analytics />} />
         </Routes>
       </Layout>
     </Router>

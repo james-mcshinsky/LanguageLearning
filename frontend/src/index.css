@@ -5,9 +5,11 @@
 :root[data-theme="light"] {
   --bg-primary: #ffffff;
   --text-primary: #1a202c;
+  --bg-secondary: #e2e8f0;
 }
 
 :root[data-theme="dark"] {
   --bg-primary: #1a202c;
   --text-primary: #edf2f7;
+  --bg-secondary: #2d3748;
 }

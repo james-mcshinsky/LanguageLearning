@@ -113,7 +113,7 @@ vocab=extract_vocabulary(path, manager)
 print(json.dumps({'vocab': vocab}))
 `;
     try {
-      const result = runPython(code, [JSON.stringify(goals), tempPath]);
+      const result = await runPython(code, [JSON.stringify(goals), tempPath]);
       fs.unlinkSync(tempPath);
       res.json(result);
     } catch (err: any) {

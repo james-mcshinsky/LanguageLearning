@@ -24,7 +24,7 @@ export async function loadGoals(): Promise<{
   );
   let goals = Array.isArray(res.Item?.data) ? res.Item!.data : [];
   if (!goals.length) {
-    const result = runPython(
+    const result = await runPython(
       "import json\nfrom language_learning.goals import load_default_goals\nprint(json.dumps([g.__dict__ for g in load_default_goals()]))",
     );
     goals = result || [];
@@ -56,7 +56,7 @@ export async function saveReviewState(state: Record<string, any>) {
 
 // Load the default top 5 words from the bundled COCA list
 export async function loadDefaultCocaWords(): Promise<string[]> {
-  const result = runPython(
+  const result = await runPython(
     "import json\nfrom language_learning.goals import load_default_goals\nprint(json.dumps([g.word for g in load_default_goals()]))",
   );
   return result || [];

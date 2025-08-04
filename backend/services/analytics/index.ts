@@ -83,7 +83,7 @@ for _ in range(5):
 print(json.dumps({'next': next_words}))
 `;
     try {
-      const result = runPython(code, [
+      const result = await runPython(code, [
         JSON.stringify(goalRanks),
         JSON.stringify(review),
         JSON.stringify(activeGoals.map((g) => g.word)),

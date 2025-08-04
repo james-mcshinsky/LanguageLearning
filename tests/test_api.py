@@ -16,15 +16,18 @@ def test_goal_setup_and_persistence(tmp_path):
 
     resp = client.post("/goals", json={"word": "hello"})
     assert resp.status_code == 200
-    assert resp.json()["goals"][0]["word"] == "hello"
+    goals = resp.json()["goals"]
+    assert any(g["word"] == "hello" for g in goals)
 
     resp = client.get("/goals")
     assert resp.status_code == 200
-    assert resp.json()["goals"] == [{"word": "hello", "weight": 1.0}]
+    goals = resp.json()["goals"]
+    assert any(g["word"] == "hello" and not g.get("is_default") for g in goals)
+    assert len(goals) == 650
 
     with open(storage.path, "r", encoding="utf-8") as fh:
         data = json.load(fh)
-    assert data["goals"][0]["word"] == "hello"
+    assert any(g["word"] == "hello" and not g.get("is_default") for g in data["goals"])
 
 
 def test_lesson_and_media_endpoints(tmp_path):

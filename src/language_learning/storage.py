@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 from dataclasses import asdict
 from typing import Any, Dict, List, Optional
 
@@ -27,10 +28,22 @@ class JSONStorage:
     def _read(self) -> Dict[str, Any]:
         if not os.path.exists(self.path):
             return {}
-        with open(self.path, "r", encoding="utf-8") as fh:
-            return json.load(fh)
+        try:
+            with open(self.path, "r", encoding="utf-8") as fh:
+                return json.load(fh)
+        except json.JSONDecodeError:
+            backup = f"{self.path}.bak"
+            if os.path.exists(backup):
+                try:
+                    with open(backup, "r", encoding="utf-8") as fh:
+                        return json.load(fh)
+                except json.JSONDecodeError:
+                    pass
+            return {}
 
     def _write(self, data: Dict[str, Any]) -> None:
+        if os.path.exists(self.path):
+            shutil.copy(self.path, f"{self.path}.bak")
         with open(self.path, "w", encoding="utf-8") as fh:
             json.dump(data, fh)
 

@@ -73,6 +73,21 @@ npm run lint
 pytest
 ```
 
+## COCA Vocabulary Fallback
+
+During development, the Python modules default to the five most frequent words
+from the Corpus of Contemporary American English—"you", "i", "the", "to", and
+"a"—when no vocabulary list is supplied. This keeps demos and tests working
+even before your own data is available.
+
+```python
+from language_learning.ai_lessons import generate_lesson
+from language_learning import get_top_coca_words
+
+lesson = generate_lesson()
+assert lesson["vocabulary"] == get_top_coca_words()
+```
+
 ## CI/CD Pipeline
 
 GitHub Actions (or a similar CI service) can be configured to:

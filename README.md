@@ -60,6 +60,22 @@ from language_learning import (
 )
 ```
 
+### COCA Vocabulary Fallback
+
+If no vocabulary is supplied, the modules automatically fall back to the five
+most common words from the Corpus of Contemporary American English (COCA):
+"you", "i", "the", "to", and "a". This ensures that examples and initial test
+runs always return meaningful output.
+
+```python
+from language_learning.ai_lessons import generate_lesson
+from language_learning import get_top_coca_words
+
+lesson = generate_lesson()
+print(lesson["vocabulary"])  # ['you', 'i', 'the', 'to', 'a']
+print(get_top_coca_words())   # ['you', 'i', 'the', 'to', 'a']
+```
+
 ## Running Tests
 
 This project uses [`pytest`](https://docs.pytest.org/) for its unit tests. The

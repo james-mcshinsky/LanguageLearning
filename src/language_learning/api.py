@@ -29,8 +29,8 @@ class VocabularyIn(BaseModel):
 
 class LessonPromptsIn(BaseModel):
     topic: str
-    new_words: List[str] = []
-    review_words: List[str] = []
+    new_words: list[str] | None = None
+    review_words: list[str] | None = None
 
 
 class BlurbIn(BaseModel):

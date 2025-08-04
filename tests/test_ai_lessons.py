@@ -40,3 +40,13 @@ def test_mcq_shuffles_and_tracks_answer():
     assert mcq["choices"][mcq["answer_index"]] == mcq["answer"]
     assert set(mcq["choices"]) == {mcq["answer"], "hola_a", "hola_b", "hola_c"}
     assert mcq["choices"] != [mcq["answer"], "hola_a", "hola_b", "hola_c"]
+
+
+def test_generate_mcq_lesson_defaults_to_coca_words():
+    lesson = generate_mcq_lesson("basics")
+    mcq_words = [item["word"] for item in lesson if item["type"] == "mcq"]
+    expected: list[str] = []
+    for w in get_top_coca_words():
+        expected.extend([w, w])
+    assert mcq_words == expected
+

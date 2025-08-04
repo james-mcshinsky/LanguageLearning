@@ -33,10 +33,6 @@
   --color-success: #529917;
   --color-danger: #C53030;
   --color-inverse: #FFFFFF;
-  --button-primary-bg: var(--color-primary);
-  --button-primary-text: #0F0F0F;
-  --button-secondary-bg: var(--color-success);
-  --button-secondary-text: #FFFFFF;
 }
 
 [data-theme='dark'] {
@@ -50,10 +46,6 @@
   --color-success: #74C476;
   --color-danger: #E53E3E;
   --color-inverse: #0F0F0F;
-  --button-primary-bg: var(--color-primary);
-  --button-primary-text: #0F0F0F;
-  --button-secondary-bg: var(--color-success);
-  --button-secondary-text: #FFFFFF;
 }
 
 @layer base {
@@ -131,8 +123,8 @@
 
   .button-primary {
     font-weight: 600;
-    background-color: var(--button-primary-bg);
-    color: var(--button-primary-text);
+    background-color: var(--color-primary);
+    color: var(--color-text-primary);
     border-radius: 0.5rem;
     padding: 0.75rem 1.5rem;
     transition: transform 0.2s;
@@ -146,8 +138,8 @@
 
   .button-secondary {
     font-weight: 600;
-    background-color: var(--button-secondary-bg);
-    color: var(--button-secondary-text);
+    background-color: var(--color-success);
+    color: var(--color-text-primary);
     border-radius: 0.5rem;
     padding: 0.75rem 1.5rem;
     transition: transform 0.2s;

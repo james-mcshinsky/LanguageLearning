@@ -20,12 +20,14 @@ To get started, you will need:
 - Python 3.10+
 - `pip` for managing packages
 
-Create a virtual environment and install dependencies:
+Create a virtual environment and install dependencies. The project now ships a
+`pyproject.toml` so the package can be installed in editable mode:
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate  # On Windows use: .venv\Scripts\activate
 pip install -r requirements.txt
+pip install -e .
 ```
 
 ### Dependencies
@@ -51,11 +53,18 @@ The frontend can load `VITE_API_URL` from `frontend/.env` (see
 Each module includes a small example when executed directly:
 
 ```bash
-PYTHONPATH=src python -m language_learning.vocabulary
-PYTHONPATH=src python -m language_learning.spaced_repetition
-PYTHONPATH=src python -m language_learning.ai_lessons
-PYTHONPATH=src python -m language_learning.media_integration
+python -m language_learning.vocabulary
+python -m language_learning.spaced_repetition
+python -m language_learning.ai_lessons
+python -m language_learning.media_integration
 ```
+
+To try the FastAPI service locally, run:
+
+```bash
+python -m language_learning.api
+```
+This uses `uvicorn` under the hood and serves the API on http://localhost:8000 by default.
 
 You can also import the modules in your own scripts:
 

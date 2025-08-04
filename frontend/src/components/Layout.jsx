@@ -14,6 +14,12 @@ export default function Layout({ children }) {
 
   return (
     <div className="min-h-screen grid grid-rows-[auto,1fr,auto]">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:bg-white focus:text-primary focus:px-s focus:py-xs focus:rounded"
+      >
+        Skip to main content
+      </a>
       <header className="site-header">
         <div className="flex items-center space-x-m">
           <Button
@@ -71,7 +77,10 @@ export default function Layout({ children }) {
           onClose={() => setSettingsOpen(false)}
         />
       )}
-      <main className="page-content grid md:grid-cols-[16rem,1fr]">
+      <main
+        id="main-content"
+        className="page-content grid md:grid-cols-[16rem,1fr]"
+      >
         <aside
           className={`sidebar ${sidebarOpen ? '' : '-translate-x-full'} md:translate-x-0`}
         >

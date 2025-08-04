@@ -1,27 +1,86 @@
-<!DOCTYPE html>
-<html lang="en" data-theme="dark">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Language Learning</title>
-</head>
-<body class="min-h-screen bg-bg text-text">
-  <button id="theme-toggle" class="p-2 border">Toggle Theme</button>
-  <div id="root"></div>
-  <script>
-    const root = document.documentElement;
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-    if (!prefersDark.matches) {
-      root.dataset.theme = 'light';
-    }
-    prefersDark.addEventListener('change', (e) => {
-      root.dataset.theme = e.matches ? 'dark' : 'light';
-    });
-    window.toggleTheme = () => {
-      root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
-    };
-    document.getElementById('theme-toggle').addEventListener('click', window.toggleTheme);
-  </script>
-  <script type="module" src="/src/main.jsx"></script>
-</body>
+<!doctype html>
+<html dir="ltr">
+  <head>
+    <!-- Character set & viewport -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+
+    <!-- SEO & crawl-blocking -->
+    <meta name="robots" content="NOODP">
+    <noscript>
+      <meta http-equiv="refresh" content="0; url=/nojs/splash">
+    </noscript>
+
+    <!-- Mobile-app capable -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Language Learning">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Social & translation settings -->
+    <meta name="google" content="notranslate">
+    <meta name="twitter:site" content="@languagelearning">
+    <meta name="twitter:card" content="summary">
+    <meta property="og:type" content="website">
+    <!-- Additional og: and twitter: tags can be added here -->
+
+    <!-- Favicons & touch icons -->
+    <link rel="apple-touch-icon" href="/icons/touch-icon.png">
+    <link rel="icon" href="/favicon.ico">
+    <link rel="manifest" href="/manifest.json">
+
+    <!-- Domain-verification & canonical -->
+    <meta name="facebook-domain-verification" content="REPLACE_WITH_YOUR_CODE">
+    <link rel="canonical" href="https://example.com/learn">
+    <!-- hreflang alternates can be added here -->
+
+    <!-- Cookie consent & reCAPTCHA -->
+    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js"></script>
+    <script>function OptanonWrapper(){}</script>
+    <script async defer src="https://www.recaptcha.net/recaptcha/enterprise.js?render=YOUR_RECAPTCHA_KEY"></script>
+
+    <!-- Web fonts via FontFace API -->
+    <script>
+      (self.webpackChunk=self.webpackChunk||[]).push([[6725],{
+        6725:(e,o,f)=>{/* FontFace loading code */}
+      }]);
+    </script>
+
+    <!-- Core CSS bundles -->
+    <link href="/css/6458-acfd0c45.css" rel="stylesheet">
+    <link href="/css/app-0b29a805.css" rel="stylesheet">
+
+    <!-- Title & meta description/keywords -->
+    <title>Language Learning – Learn a language for free</title>
+    <meta name="description" content="Language Learning is a fun way to practice languages.">
+    <meta name="keywords" content="learn, language, free, flashcards">
+  </head>
+  <body>
+    <!-- GTM no-script fallback -->
+    <noscript>
+      <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX"
+              height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+
+    <!-- Mount points -->
+    <div id="root"></div>
+    <div id="overlays"></div>
+
+    <!-- Feature-detection redirect -->
+    <script>
+      var features = [true], i = 0;
+      for (; i < features.length; i++) {
+        if (!features[i]) {
+          window.location.href = "/errors/not-supported.html";
+        }
+      }
+      window.app = {};
+    </script>
+
+    <!-- Load JS bundles -->
+    <script defer src="/js/manifest-afa5159b.js"></script>
+    <script defer src="/js/features-91ec4487.js"></script>
+    <script defer src="/js/app-959ea2e5.js"></script>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>

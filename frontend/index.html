@@ -35,8 +35,25 @@
     <!-- hreflang alternates can be added here -->
 
     <!-- Cookie consent & reCAPTCHA -->
-    <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js"></script>
-    <script>function OptanonWrapper(){}</script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js"></script>
+    <script>
+      window.addEventListener("load", function () {
+        window.cookieconsent.initialise({
+          palette: {
+            popup: { background: "#000" },
+            button: { background: "#f1d600" }
+          },
+          theme: "classic",
+          content: {
+            message: "This website uses cookies to ensure you get the best experience.",
+            dismiss: "Got it!",
+            link: "Learn more",
+            href: "/privacy"
+          }
+        });
+      });
+    </script>
     <script async defer src="https://www.recaptcha.net/recaptcha/enterprise.js?render=YOUR_RECAPTCHA_KEY"></script>
 
     <!-- Web fonts via FontFace API -->

@@ -46,6 +46,12 @@ Copy `backend/.env.example` to `backend/.env` and provide values such as
 The frontend can load `VITE_API_URL` from `frontend/.env` (see
 `frontend/.env.example`) to point at your backend.
 
+## Cookie Consent
+
+The frontend includes the open-source [CookieConsent](https://www.osano.com/cookieconsent)
+library to display a basic cookie banner without relying on paid services.
+You can customize the banner by editing `frontend/index.html`.
+
 ## Usage Examples
 
 Each module includes a small example when executed directly:

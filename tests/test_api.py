@@ -49,7 +49,7 @@ def test_lesson_and_media_endpoints(tmp_path):
     assert resp.status_code == 200
     assert resp.json()["topic"] == "travel"
 
-    resp = client.get("/media", params={"word": "word", "level": 1})
+    resp = client.get("/media", params={"word": "you", "level": 1})
     assert resp.status_code == 200
     items = resp.json()
     assert items and all(item["level"] == 2 for item in items)

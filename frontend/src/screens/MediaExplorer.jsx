@@ -90,7 +90,7 @@ export default function MediaExplorer() {
         <Input
           value={queryWord}
           onChange={(e) => setQueryWord(e.target.value)}
-          placeholder="word"
+          placeholder="you"
         />
         <Input
           className="w-16"

@@ -16,6 +16,21 @@ module.exports = {
         "accent-secondary": "var(--accent-secondary)",
         inverse: "var(--text-inverse)",
       },
+      spacing: {
+        xs: "var(--space-xs)",
+        sm: "var(--space-sm)",
+        md: "var(--space-md)",
+        lg: "var(--space-lg)",
+      },
+      fontFamily: {
+        sans: ["var(--font-sans)", "sans-serif"],
+        heading: ["var(--font-heading)", "sans-serif"],
+      },
+      fontSize: {
+        base: "var(--text-base)",
+        lg: "var(--text-lg)",
+        xl: "var(--text-xl)",
+      },
     },
   },
   plugins: [],

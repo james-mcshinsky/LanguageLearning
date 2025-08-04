@@ -19,10 +19,13 @@ module.exports = {
         inverse: "var(--color-inverse)",
       },
       spacing: {
+        xxs: "var(--space-xxs)",
         xs: "var(--space-xs)",
-        sm: "var(--space-sm)",
-        md: "var(--space-md)",
-        lg: "var(--space-lg)",
+        s: "var(--space-s)",
+        m: "var(--space-m)",
+        l: "var(--space-l)",
+        xl: "var(--space-xl)",
+        xxl: "var(--space-xxl)",
       },
       fontFamily: {
         sans: ["var(--font-sans)", "sans-serif"],

@@ -75,16 +75,16 @@ export default function Onboarding() {
   };
 
   return (
-    <div className="p-md">
+    <div className="p-s">
       <div aria-live="polite">
         {isLoading && <p>Loading...</p>}
         {error && <p>{error}</p>}
       </div>
         {step === 1 && (
         <Card>
-          <h1 className="text-2xl mb-md">Choose your first goal</h1>
+          <h1 className="text-2xl mb-s">Choose your first goal</h1>
           <div
-            className="space-x-sm mb-sm"
+            className="space-x-xs mb-xs"
             role="group"
             aria-label="Goal templates"
             aria-describedby="template-instructions"
@@ -95,16 +95,16 @@ export default function Onboarding() {
                 variant={template === name ? 'primary' : 'outline'}
                 onClick={() => handleTemplate(name)}
                 aria-label={`Use ${name} template`}
-                className="mr-sm"
+                className="mr-xs"
               >
                 {name}
               </Button>
             ))}
           </div>
-          <p id="template-instructions" className="text-sm text-gray-600 mb-md">
+          <p id="template-instructions" className="text-sm text-gray-600 mb-s">
             Use Tab to focus template buttons and Enter to select.
           </p>
-          <label htmlFor="goal-text" className="block mb-xs">
+          <label htmlFor="goal-text" className="block mb-xxs">
             Enter or paste your own text
           </label>
           <Input
@@ -113,9 +113,9 @@ export default function Onboarding() {
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="Or enter your own text"
-            className="w-full mb-sm h-40"
+            className="w-full mb-xs h-40"
           />
-          <label htmlFor="goal-file" className="block mb-xs">
+          <label htmlFor="goal-file" className="block mb-xxs">
             Upload a text file
           </label>
           <Input
@@ -123,7 +123,7 @@ export default function Onboarding() {
             type="file"
             accept=".txt"
             onChange={handleFile}
-            className="mb-md"
+            className="mb-s"
           />
           <div>
             <Button onClick={startExtraction} disabled={isLoading}>
@@ -135,15 +135,15 @@ export default function Onboarding() {
 
         {step === 2 && (
         <Card>
-          <h2 className="text-xl mb-md">Select words to learn</h2>
-          <ul className="mb-md">
+          <h2 className="text-xl mb-s">Select words to learn</h2>
+          <ul className="mb-s">
             {vocab.map((word) => (
-              <li key={word} className="flex items-center mb-xs">
+              <li key={word} className="flex items-center mb-xxs">
                 <input
                   type="checkbox"
                   checked={selected.includes(word)}
                   onChange={() => toggleWord(word)}
-                  className="mr-xs"
+                  className="mr-xxs"
                 />
                 <span>{word}</span>
               </li>
@@ -157,9 +157,9 @@ export default function Onboarding() {
 
         {step === 3 && (
         <Card>
-          <h2 className="mb-sm">Goals saved!</h2>
+          <h2 className="mb-xs">Goals saved!</h2>
           <p>You are ready to start learning.</p>
-          <Card.Button className="mt-md">Start Learning</Card.Button>
+          <Card.Button className="mt-s">Start Learning</Card.Button>
         </Card>
       )}
     </div>

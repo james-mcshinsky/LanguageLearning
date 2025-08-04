@@ -1,4 +1,7 @@
 import { spawn } from 'child_process';
+import path from 'path';
+
+const pyPath = path.resolve(__dirname, '../../../src');
 
 /**
  * Execute a Python module asynchronously via ``python -m`` and resolve with
@@ -14,7 +17,7 @@ export function runPython(
 ): Promise<any> {
   return new Promise((resolve, reject) => {
     const proc = spawn('python', ['-m', module, ...args], {
-      env: { ...process.env, PYTHONPATH: 'src' },
+      env: { ...process.env, PYTHONPATH: pyPath },
     });
 
     let stdout = '';

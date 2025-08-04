@@ -4,6 +4,7 @@ import Button from '../components/ui/Button';
 import { useNavigate } from 'react-router-dom';
 import { apiClient } from '../services/api.js';
 import Analytics from './Analytics.jsx';
+import StatusMessage from '../components/StatusMessage.jsx';
 
 export default function Dashboard() {
   const [progress, setProgress] = useState({ learned: 0, total: 0 });
@@ -33,11 +34,11 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <div aria-live="polite">
+    <div>
       {isLoading ? (
-        <p>Loading...</p>
+        <StatusMessage type="loading" message="Loading..." />
       ) : error ? (
-        <p>{error}</p>
+        <StatusMessage type="error" message={error} />
       ) : (
         <>
           <ProgressOverview heading="Dashboard" progress={progress} next={next} />

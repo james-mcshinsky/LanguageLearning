@@ -115,3 +115,13 @@ def create_app(storage: Optional[JSONStorage] = None) -> FastAPI:
 
 
 app = create_app()
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(
+        "language_learning.api:app",
+        host="0.0.0.0",
+        port=int(os.environ.get("PORT", 8000)),
+    )

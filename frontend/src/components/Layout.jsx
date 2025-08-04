@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import Sidebar from './Sidebar.jsx';
+import { useTheme } from '../context/ThemeContext.jsx';
 
 const navItems = [
   { path: '/', label: 'Onboarding' },
@@ -13,12 +14,7 @@ const navItems = [
 
 export default function Layout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  const handleToggle = () => {
-    if (window.toggleTheme) {
-      window.toggleTheme();
-    }
-  };
+  const { toggleTheme } = useTheme();
 
   const toggleSidebar = () => setSidebarOpen((open) => !open);
 
@@ -54,7 +50,7 @@ export default function Layout({ children }) {
         </div>
         <button
           type="button"
-          onClick={handleToggle}
+          onClick={toggleTheme}
           aria-label="Toggle theme"
           className="p-2 rounded hover:bg-white/5 focus:bg-white/5 focus:outline-none"
         >

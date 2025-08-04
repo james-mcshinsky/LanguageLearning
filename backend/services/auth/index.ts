@@ -48,7 +48,7 @@ export function createAuthService() {
   });
 
   app.put('/users/:id', async (req, res) => {
-    const id = Number(req.params.id);
+    const { id } = req.params;
     const { username, password } = req.body as {
       username?: string;
       password?: string;
@@ -64,7 +64,7 @@ export function createAuthService() {
   });
 
   app.delete('/users/:id', async (req, res) => {
-    const id = Number(req.params.id);
+    const { id } = req.params;
     const user = await getUserById(id);
     if (!user) {
       return res.status(404).json({ error: 'user not found' });

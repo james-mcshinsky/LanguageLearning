@@ -6,6 +6,7 @@ import {
   ScanCommand,
   DeleteCommand,
 } from '@aws-sdk/lib-dynamodb';
+import { randomUUID } from 'crypto';
 import { runPython } from '../utils';
 
 const TABLE_NAME = process.env.DATA_TABLE || 'language-learning-data';
@@ -67,7 +68,7 @@ export async function loadDefaultCocaWords(): Promise<string[]> {
 const USERS_PREFIX = 'user#';
 
 export type UserRecord = {
-  id: number;
+  id: string;
   username: string;
   passwordHash: string;
 };
@@ -76,7 +77,7 @@ export async function createUser(
   username: string,
   passwordHash: string,
 ): Promise<UserRecord> {
-  const id = Date.now();
+  const id = randomUUID();
   const user: UserRecord = { id, username, passwordHash };
   await dynamo.send(
     new PutCommand({
@@ -87,7 +88,7 @@ export async function createUser(
   return user;
 }
 
-export async function getUserById(id: number): Promise<UserRecord | null> {
+export async function getUserById(id: string): Promise<UserRecord | null> {
   const res = await dynamo.send(
     new GetCommand({ TableName: TABLE_NAME, Key: { pk: `${USERS_PREFIX}${id}` } }),
   );
@@ -137,7 +138,7 @@ export async function saveUser(user: UserRecord) {
   );
 }
 
-export async function deleteUser(id: number) {
+export async function deleteUser(id: string) {
   await dynamo.send(
     new DeleteCommand({ TableName: TABLE_NAME, Key: { pk: `${USERS_PREFIX}${id}` } }),
   );

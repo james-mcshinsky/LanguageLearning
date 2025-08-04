@@ -23,7 +23,7 @@ export default function Learn() {
         const data = await apiClient('/lesson/queue');
         setQueue(data.queue || []);
       } catch (err) {
-        setError('Unable to load lesson.');
+        setError(err.message);
       } finally {
         setIsLoading(false);
       }
@@ -41,7 +41,7 @@ export default function Learn() {
         body: { word, quality },
       });
     } catch (err) {
-      setError('Failed to submit review.');
+      setError(err.message);
     }
   };
 

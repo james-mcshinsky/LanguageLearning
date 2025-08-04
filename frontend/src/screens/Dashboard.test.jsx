@@ -63,9 +63,7 @@ describe('Dashboard', () => {
       </MemoryRouter>
     );
     await waitFor(() => {
-      expect(
-        screen.getByText('Unable to load dashboard data.')
-      ).toBeInTheDocument();
+      expect(screen.getByText('Network request failed')).toBeInTheDocument();
     });
   });
 });

@@ -25,7 +25,7 @@ export default function Dashboard() {
         setProgress(progressData);
         setNext(nextData.next || []);
       } catch (err) {
-        setError('Unable to load dashboard data.');
+        setError(err.message);
       } finally {
         setIsLoading(false);
       }

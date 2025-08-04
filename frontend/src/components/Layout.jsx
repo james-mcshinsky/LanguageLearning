@@ -15,7 +15,7 @@ export default function Layout({ children }) {
   return (
     <div className="min-h-screen grid grid-rows-[auto,1fr,auto]">
       <header className="site-header">
-        <div className="flex items-center space-x-lg">
+        <div className="flex items-center space-x-m">
           <Button
             type="button"
             onClick={toggleSidebar}
@@ -28,13 +28,13 @@ export default function Layout({ children }) {
             <span className="block w-6 h-0.5 bg-current my-1" />
             <span className="block w-6 h-0.5 bg-current" />
           </Button>
-          <nav className="flex space-x-lg">
+          <nav className="flex space-x-m">
             {navItems.map((item) => (
               <NavLink
                 key={item.path}
                 to={item.path}
                 className={({ isActive }) =>
-                  `px-sm py-xs rounded hover:bg-white/5 focus:bg-white/5 focus:outline-none ${
+                  `px-xs py-xxs rounded hover:bg-white/5 focus:bg-white/5 focus:outline-none ${
                     isActive ? 'active' : ''
                   }`
                 }
@@ -62,7 +62,7 @@ export default function Layout({ children }) {
         <section className="skill-path">{children}</section>
       </main>
       <footer className="site-footer">
-        <nav className="flex justify-center space-x-md">
+        <nav className="flex justify-center space-x-s">
           <a href="#">About</a>
           <a href="#">Contact</a>
           <a href="#">Privacy</a>

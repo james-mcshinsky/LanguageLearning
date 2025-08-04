@@ -83,10 +83,10 @@ export default function MediaExplorer() {
   }
 
   return (
-    <div className="p-md space-y-lg">
+    <div className="p-s space-y-m">
       <h1 className="text-2xl font-bold">Media Explorer</h1>
 
-      <div className="space-x-sm">
+      <div className="space-x-xs">
         <Input
           value={queryWord}
           onChange={(e) => setQueryWord(e.target.value)}
@@ -102,8 +102,8 @@ export default function MediaExplorer() {
       </div>
 
       {item && (
-        <Card className="space-y-sm">
-          <div className="flex space-x-sm">
+        <Card className="space-y-xs">
+          <div className="flex space-x-xs">
             <Button onClick={prev} variant="secondary">
               Prev
             </Button>
@@ -144,9 +144,9 @@ export default function MediaExplorer() {
         </Card>
       )}
 
-      <div className="mt-lg">
+      <div className="mt-m">
         <h2 className="text-xl font-semibold">AI Blurb Generator</h2>
-        <Card className="space-y-sm mt-sm">
+        <Card className="space-y-xs mt-xs">
           <Input
             className="w-full"
             placeholder="Known words (comma separated)"
@@ -159,7 +159,7 @@ export default function MediaExplorer() {
             value={lPlusWords}
             onChange={(e) => setLPlusWords(e.target.value)}
           />
-          <div className="flex items-center space-x-sm">
+          <div className="flex items-center space-x-xs">
             <Input
               type="range"
               min="1"
@@ -170,7 +170,7 @@ export default function MediaExplorer() {
             <span>{blurbLength} words</span>
           </div>
           <Button onClick={generateBlurb}>Generate</Button>
-          {blurb && <p className="mt-sm">{blurb}</p>}
+          {blurb && <p className="mt-xs">{blurb}</p>}
         </Card>
       </div>
     </div>

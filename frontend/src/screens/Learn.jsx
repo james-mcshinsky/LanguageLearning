@@ -101,7 +101,7 @@ export default function Learn() {
 
   if (isLoading) {
     return (
-      <div className="p-md" aria-live="polite">
+      <div className="p-s" aria-live="polite">
         <p>Loading...</p>
       </div>
     );
@@ -109,7 +109,7 @@ export default function Learn() {
 
   if (error) {
     return (
-      <div className="p-md" aria-live="polite">
+      <div className="p-s" aria-live="polite">
         <p>{error}</p>
       </div>
     );
@@ -117,19 +117,19 @@ export default function Learn() {
 
   if (!current) {
     return (
-      <div className="p-md" aria-live="polite">
+      <div className="p-s" aria-live="polite">
         <h1 className="text-2xl font-bold">Learn</h1>
-        <p className="mt-md">No items due.</p>
+        <p className="mt-s">No items due.</p>
       </div>
     );
   }
 
   return (
-    <div className="p-md" aria-live="polite">
+    <div className="p-s" aria-live="polite">
       <h1 className="text-2xl font-bold">Learn</h1>
 
       {current.type === 'mcq' && (
-        <Card className="mt-md">
+        <Card className="mt-s">
           <p id="mcq-question">{current.question}</p>
           <div
             role="radiogroup"
@@ -143,7 +143,7 @@ export default function Learn() {
                 aria-checked="false"
                 onClick={() => handleMCQ(idx)}
                 variant="outline"
-                className="block mt-sm w-full text-left"
+                className="block mt-xs w-full text-left"
               >
                 {c}
               </Button>
@@ -156,7 +156,7 @@ export default function Learn() {
       )}
 
       {current.type === 'fill_blank' && (
-        <Card className="mt-md">
+        <Card className="mt-s">
           <p id="fill-sentence">{current.sentence}</p>
           <label htmlFor="fill-input" className="block mt-2">
             Your answer
@@ -167,14 +167,14 @@ export default function Learn() {
             onChange={(e) => setInput(e.target.value)}
             aria-labelledby="fill-sentence"
           />
-          <Button onClick={handleFillBlank} className="ml-sm mt-sm" variant="outline">
+          <Button onClick={handleFillBlank} className="ml-xs mt-xs" variant="outline">
             Submit
           </Button>
         </Card>
       )}
 
       {current.type === 'matching' && (
-        <Card className="mt-md">
+        <Card className="mt-s">
           <p>Drag the word to its match:</p>
           <div className="flex space-x-4 mt-2">
             <div
@@ -201,9 +201,9 @@ export default function Learn() {
       )}
 
       {current.type === 'grammar_tip' && (
-        <Card className="mt-md">
+        <Card className="mt-s">
           <p className="italic">{current.tip}</p>
-          <Button onClick={next} className="mt-sm" variant="outline">
+          <Button onClick={next} className="mt-xs" variant="outline">
             Next
           </Button>
         </Card>
@@ -212,7 +212,7 @@ export default function Learn() {
       {feedback.message && (
         <div
           key={index}
-          className={`mt-md flex items-center p-sm rounded transition-all duration-300 transform ${
+          className={`mt-s flex items-center p-xs rounded transition-all duration-300 transform ${
             animateFeedback
               ? 'opacity-100 translate-y-0'
               : 'opacity-0 -translate-y-2'

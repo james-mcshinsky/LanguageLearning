@@ -38,7 +38,7 @@ export default function Sidebar() {
             <NavLink
               to="/onboarding"
               className={({ isActive }) =>
-                `block px-sm py-xs rounded hover:bg-white/5 focus:bg-white/5 focus:outline-none ${
+                `block px-xs py-xxs rounded hover:bg-white/5 focus:bg-white/5 focus:outline-none ${
                   isActive ? 'active' : ''
                 }`
               }
@@ -50,7 +50,7 @@ export default function Sidebar() {
             <NavLink
               to="/goals"
               className={({ isActive }) =>
-                `block px-sm py-xs rounded hover:bg-white/5 focus:bg-white/5 focus:outline-none ${
+                `block px-xs py-xxs rounded hover:bg-white/5 focus:bg-white/5 focus:outline-none ${
                   isActive ? 'active' : ''
                 }`
               }
@@ -62,7 +62,7 @@ export default function Sidebar() {
             <NavLink
               to="/analytics"
               className={({ isActive }) =>
-                `block px-sm py-xs rounded hover:bg-white/5 focus:bg-white/5 focus:outline-none ${
+                `block px-xs py-xxs rounded hover:bg-white/5 focus:bg-white/5 focus:outline-none ${
                   isActive ? 'active' : ''
                 }`
               }

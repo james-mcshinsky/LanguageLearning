@@ -5,10 +5,13 @@
 @tailwind utilities;
 
 :root {
-  --space-xs: 0.25rem;
-  --space-sm: 0.5rem;
-  --space-md: 1rem;
-  --space-lg: 1.5rem;
+  --space-xxs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-s: 1rem;
+  --space-m: 1.5rem;
+  --space-l: 2rem;
+  --space-xl: 3rem;
+  --space-xxl: 4rem;
   --font-sans: 'Gabarito', sans-serif;
   --font-heading: 'Gabarito', sans-serif;
   --font-weight-regular: 400;
@@ -76,7 +79,7 @@
   }
 
   .site-header {
-    @apply bg-surface text-text p-md flex justify-between items-center;
+    @apply bg-surface text-text p-s flex justify-between items-center;
   }
 
   .page-content {
@@ -84,15 +87,15 @@
   }
 
   .sidebar {
-    @apply border-r border-white/10 p-md bg-surface fixed inset-y-0 left-0 w-64 transform transition-transform duration-300 ease-in-out md:static md:w-auto md:block;
+    @apply border-r border-white/10 p-s bg-surface fixed inset-y-0 left-0 w-64 transform transition-transform duration-300 ease-in-out md:static md:w-auto md:block;
   }
 
   .skill-path {
-    @apply p-md overflow-y-auto;
+    @apply p-s overflow-y-auto;
   }
 
   .site-footer {
-    @apply bg-surface text-text p-md text-center;
+    @apply bg-surface text-text p-s text-center;
   }
 
   .button-primary {

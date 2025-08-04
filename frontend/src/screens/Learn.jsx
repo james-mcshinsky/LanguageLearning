@@ -3,6 +3,7 @@ import { apiClient } from '../services/api';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import Card from '../components/ui/Card';
+import StatusMessage from '../components/StatusMessage.jsx';
 
 export default function Learn() {
   const [queue, setQueue] = useState([]);
@@ -103,16 +104,16 @@ export default function Learn() {
 
   if (isLoading) {
     return (
-      <div className="p-s" aria-live="polite">
-        <p>Loading...</p>
+      <div className="p-s">
+        <StatusMessage type="loading" message="Loading..." />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="p-s" aria-live="polite">
-        <p>{error}</p>
+      <div className="p-s">
+        <StatusMessage type="error" message={error} />
       </div>
     );
   }

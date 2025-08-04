@@ -3,6 +3,7 @@ import { apiClient } from '../services/api';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import Card from '../components/ui/Card';
+import StatusMessage from '../components/StatusMessage.jsx';
 
 const TEMPLATE_TEXT = {
   books: 'Read books in your target language to expand vocabulary and comprehension.',
@@ -76,11 +77,11 @@ export default function Onboarding() {
 
   return (
     <div className="p-s">
-      <div aria-live="polite">
-        {isLoading && <p>Loading...</p>}
-        {error && <p>{error}</p>}
-      </div>
-        {step === 1 && (
+      {isLoading && (
+        <StatusMessage type="loading" message="Loading..." />
+      )}
+      {error && <StatusMessage type="error" message={error} />}
+      {step === 1 && (
         <Card>
           <h1 className="text-2xl mb-s">Choose your first goal</h1>
           <div

@@ -1,18 +1,19 @@
 import { spawn } from 'child_process';
 
 /**
- * Execute Python code asynchronously, resolving with parsed JSON output.
- * Stdout and stderr are captured incrementally. The returned promise is
- * rejected if the process exits with a non-zero code or if stderr receives
- * content. A timeout (ms) may be provided to kill the process if it hangs.
+ * Execute a Python module asynchronously via ``python -m`` and resolve with
+ * parsed JSON output. Stdout and stderr are captured incrementally. The
+ * returned promise is rejected if the process exits with a non-zero code or if
+ * stderr receives content. A timeout (ms) may be provided to kill the process
+ * if it hangs.
  */
 export function runPython(
-  code: string,
+  module: string,
   args: string[] = [],
   { timeoutMs = 10000 }: { timeoutMs?: number } = {},
 ): Promise<any> {
   return new Promise((resolve, reject) => {
-    const proc = spawn('python', ['-c', code, ...args], {
+    const proc = spawn('python', ['-m', module, ...args], {
       env: { ...process.env, PYTHONPATH: 'src' },
     });
 

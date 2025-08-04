@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ProgressOverview from '../components/ProgressOverview.jsx';
 import Button from '../components/ui/Button';
 import { useNavigate } from 'react-router-dom';
+import { apiClient } from '../services/api.js';
 
 export default function Dashboard() {
   const [progress, setProgress] = useState({ learned: 0, total: 0 });
@@ -15,12 +16,10 @@ export default function Dashboard() {
       try {
         setIsLoading(true);
         setError(null);
-        const [progressRes, nextRes] = await Promise.all([
-          fetch('/analytics/progress'),
-          fetch('/analytics/reviews/next'),
+        const [progressData, nextData] = await Promise.all([
+          apiClient('/analytics/progress'),
+          apiClient('/analytics/reviews/next'),
         ]);
-        const progressData = await progressRes.json();
-        const nextData = await nextRes.json();
         setProgress(progressData);
         setNext(nextData.next || []);
       } catch (err) {

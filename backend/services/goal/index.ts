@@ -100,20 +100,11 @@ export function createGoalService() {
     const goals = await loadGoals();
     const tempPath = path.resolve(__dirname, '../../../tmp_corpus.txt');
     fs.writeFileSync(tempPath, text, 'utf-8');
-    const code = `
-import json, sys
-from language_learning.goals import GoalManager, GoalItem
-from language_learning.vocabulary import extract_vocabulary
-goals=json.loads(sys.argv[1])
-path=sys.argv[2]
-manager=GoalManager()
-for g in goals:
-    manager.create_goal(GoalItem(g['word'], float(g.get('weight',1))))
-vocab=extract_vocabulary(path, manager)
-print(json.dumps({'vocab': vocab}))
-`;
     try {
-      const result = await runPython(code, [JSON.stringify(goals), tempPath]);
+      const result = await runPython(
+        'language_learning.entrypoints',
+        ['vocabulary', JSON.stringify(goals), tempPath],
+      );
       fs.unlinkSync(tempPath);
       res.json(result);
     } catch (err: any) {

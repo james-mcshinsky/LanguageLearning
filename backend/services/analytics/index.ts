@@ -44,35 +44,9 @@ export function createAnalyticsService() {
     const defaults = await loadDefaultCocaWords();
     const review = await loadReviewState();
     const { activeGoals, goalRanks } = buildGoalRanks(goals, defaults, review);
-    const code = `
-import json, sys
-from datetime import datetime
-from language_learning.spaced_repetition import SRSFilter, SpacedRepetitionScheduler
-goal_ranks=json.loads(sys.argv[1])
-review=json.loads(sys.argv[2])
-visible=json.loads(sys.argv[3])
-visible=set(visible)
-filt=SRSFilter(goal_ranks)
-for word, info in review.items():
-    st=filt.schedulers.setdefault(word, SpacedRepetitionScheduler()).state
-    st.repetitions=int(info.get('repetitions',0))
-    st.interval=int(info.get('interval',0))
-    st.efactor=float(info.get('efactor',2.5))
-    st.next_review=datetime.fromisoformat(info['next_review'])
-next_words=[]
-for _ in range(5):
-    nxt=filt.pop_next_due()
-    if not nxt:
-        break
-    if visible and nxt not in visible:
-        del filt.schedulers[nxt]
-        continue
-    next_words.append(nxt)
-    del filt.schedulers[nxt]
-print(json.dumps({'next': next_words}))
-`;
     try {
-      const result = await runPython(code, [
+      const result = await runPython('language_learning.entrypoints', [
+        'analytics_next',
         JSON.stringify(goalRanks),
         JSON.stringify(review),
         JSON.stringify(activeGoals.map((g) => g.word)),

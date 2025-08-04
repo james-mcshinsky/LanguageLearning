@@ -22,40 +22,10 @@ export function createLessonService() {
     const defaults = await loadDefaultCocaWords();
     const review = await loadReviewState();
     const { activeGoals, goalRanks } = buildGoalRanks(goals, defaults, review);
-    const code = `
-import json, sys
-from datetime import datetime
-from language_learning.spaced_repetition import SRSFilter, SpacedRepetitionScheduler
-from language_learning.ai_lessons import generate_mcq_lesson
-goal_ranks=json.loads(sys.argv[1])
-goals=json.loads(sys.argv[2])
-review=json.loads(sys.argv[3])
-visible_words=set(g['word'] for g in goals)
-filt=SRSFilter(goal_ranks)
-for word, info in review.items():
-    st=filt.schedulers.setdefault(word, SpacedRepetitionScheduler()).state
-    st.repetitions=int(info.get('repetitions',0))
-    st.interval=int(info.get('interval',0))
-    st.efactor=float(info.get('efactor',2.5))
-    st.next_review=datetime.fromisoformat(info['next_review'])
-review_words=[]
-while True:
-    nxt=filt.pop_next_due()
-    if not nxt:
-        break
-    if visible_words and nxt not in visible_words:
-        del filt.schedulers[nxt]
-        continue
-    review_words.append(nxt)
-    del filt.schedulers[nxt]
-new_words=[g['word'] for g in goals if g['word'] not in review or review[g['word']].get('repetitions',0)==0]
-new_words=[w for w in new_words if w not in review_words][:3]
-lesson=generate_mcq_lesson('practice', new_words, review_words)
-print(json.dumps({'lesson': lesson, 'words': list(dict.fromkeys(new_words+review_words))}))
-`;
     try {
       const result =
-        (await runPython(code, [
+        (await runPython('language_learning.entrypoints', [
+          'lesson_queue',
           JSON.stringify(goalRanks),
           JSON.stringify(activeGoals),
           JSON.stringify(review),
@@ -89,27 +59,9 @@ print(json.dumps({'lesson': lesson, 'words': list(dict.fromkeys(new_words+review
     const defaults = await loadDefaultCocaWords();
     const state = await loadReviewState();
     const { goalRanks } = buildGoalRanks(goals, defaults, state);
-    const code = `
-import json, sys
-from datetime import datetime
-from language_learning.spaced_repetition import SRSFilter, SpacedRepetitionScheduler
-goal_ranks=json.loads(sys.argv[1])
-state=json.loads(sys.argv[2])
-word=sys.argv[3]
-quality=int(sys.argv[4])
-filt=SRSFilter(goal_ranks)
-for w, info in state.items():
-    st=filt.schedulers.setdefault(w, SpacedRepetitionScheduler()).state
-    st.repetitions=int(info.get('repetitions',0))
-    st.interval=int(info.get('interval',0))
-    st.efactor=float(info.get('efactor',2.5))
-    st.next_review=datetime.fromisoformat(info['next_review'])
-filt.review(word, quality)
-new_state={w:{'repetitions':s.state.repetitions,'interval':s.state.interval,'efactor':s.state.efactor,'next_review':s.state.next_review.isoformat()} for w,s in filt.schedulers.items()}
-print(json.dumps({'state': new_state, 'next_review': new_state[word]['next_review']}))
-`;
     try {
-      const result = await runPython(code, [
+      const result = await runPython('language_learning.entrypoints', [
+        'review',
         JSON.stringify(goalRanks),
         JSON.stringify(state),
         word,
@@ -125,14 +77,11 @@ print(json.dumps({'state': new_state, 'next_review': new_state[word]['next_revie
   // AI-generated lesson content
   app.get('/lesson', async (req, res) => {
     const topic = (req.query.topic as string) || '';
-    const code = `
-import json, sys
-from language_learning.ai_lessons import generate_lesson
-topic=sys.argv[1]
-print(json.dumps(generate_lesson(topic)))
-`;
     try {
-      const lesson = await runPython(code, [topic]);
+      const lesson = await runPython('language_learning.entrypoints', [
+        'lesson',
+        topic,
+      ]);
       res.json(lesson);
     } catch (err: any) {
       res.status(500).json({ error: err.message });

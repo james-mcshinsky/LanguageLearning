@@ -9,42 +9,35 @@ from typing import Dict, List, Tuple
 # ---------------------------------------------------------------------------
 # Example media catalogue used for tests and demonstrations.
 _BASE = "https://example.com/media"
+_WORDS = ["you", "i", "the", "to", "a"]
 _MEDIA_LIBRARY: Dict[str, List[Dict[str, str]]] = {
-    # Each word has media items at various difficulty levels.  Only the
+    # Each word has media items at various difficulty levels. Only the
     # L+1 level items should be returned by :func:`suggest_media`.
-    "word": [
+    w: [
         {
-            "id": "word_lvl1",
+            "id": f"{w}_lvl1",
             "level": 1,
-            "audio": f"{_BASE}/word_level1.mp3",
-            "video": f"{_BASE}/word_level1.mp4",
-            "image": f"{_BASE}/word_level1.jpg",
+            "audio": f"{_BASE}/{w}_level1.mp3",
+            "video": f"{_BASE}/{w}_level1.mp4",
+            "image": f"{_BASE}/{w}_level1.jpg",
         },
         {
-            "id": "word_lvl2",
+            "id": f"{w}_lvl2",
             "level": 2,
-            "audio": f"{_BASE}/word_level2.mp3",
-            "video": f"{_BASE}/word_level2.mp4",
-            "image": f"{_BASE}/word_level2.jpg",
+            "audio": f"{_BASE}/{w}_level2.mp3",
+            "video": f"{_BASE}/{w}_level2.mp4",
+            "image": f"{_BASE}/{w}_level2.jpg",
             "transcript": "Example transcript for level 2 media.",
         },
         {
-            "id": "word_lvl3",
+            "id": f"{w}_lvl3",
             "level": 3,
-            "audio": f"{_BASE}/word_level3.mp3",
-            "video": f"{_BASE}/word_level3.mp4",
-            "image": f"{_BASE}/word_level3.jpg",
+            "audio": f"{_BASE}/{w}_level3.mp3",
+            "video": f"{_BASE}/{w}_level3.mp4",
+            "image": f"{_BASE}/{w}_level3.jpg",
         },
-    ],
-    "another": [
-        {
-            "id": "another_lvl2",
-            "level": 2,
-            "audio": f"{_BASE}/another_level2.mp3",
-            "video": f"{_BASE}/another_level2.mp4",
-            "image": f"{_BASE}/another_level2.jpg",
-        }
-    ],
+    ]
+    for w in _WORDS
 }
 
 # ---------------------------------------------------------------------------
@@ -90,8 +83,8 @@ def record_media_interaction(user_id: str, media_id: str, word: str) -> None:
 
 if __name__ == "__main__":  # pragma: no cover - example usage
     # Demonstrate media suggestion and interaction recording
-    items = suggest_media("word", 1)
+    items = suggest_media("you", 1)
     for entry in items:
         print(entry)
-    record_media_interaction("demo_user", items[0]["id"], "word")
+    record_media_interaction("demo_user", items[0]["id"], "you")
     print(dict(interaction_queue))

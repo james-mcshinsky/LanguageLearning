@@ -6,7 +6,7 @@ from language_learning.media_integration import (
 
 
 def test_suggest_media_lplus1_filtering():
-    results = suggest_media("word", 1)
+    results = suggest_media("you", 1)
     assert len(results) == 1
     item = results[0]
     assert item["level"] == 2
@@ -16,12 +16,12 @@ def test_suggest_media_lplus1_filtering():
 
 def test_record_media_interaction_queueing():
     interaction_queue.clear()
-    record_media_interaction("alice", "media1", "word")
-    record_media_interaction("alice", "media2", "another")
-    record_media_interaction("bob", "media3", "word")
+    record_media_interaction("alice", "media1", "you")
+    record_media_interaction("alice", "media2", "i")
+    record_media_interaction("bob", "media3", "you")
 
     assert interaction_queue["alice"] == [
-        ("media1", "word"),
-        ("media2", "another"),
+        ("media1", "you"),
+        ("media2", "i"),
     ]
-    assert interaction_queue["bob"] == [("media3", "word")]
+    assert interaction_queue["bob"] == [("media3", "you")]

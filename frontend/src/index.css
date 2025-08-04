@@ -5,11 +5,19 @@
 :root[data-theme="light"] {
   --bg-primary: #ffffff;
   --text-primary: #1a202c;
+  --text-secondary: #4a5568;
   --bg-secondary: #e2e8f0;
+  --accent-primary: #276749;
+  --accent-secondary: #c53030;
+  --text-inverse: #ffffff;
 }
 
 :root[data-theme="dark"] {
   --bg-primary: #1a202c;
   --text-primary: #edf2f7;
+  --text-secondary: #a0aec0;
   --bg-secondary: #2d3748;
+  --accent-primary: #276749;
+  --accent-secondary: #c53030;
+  --text-inverse: #ffffff;
 }

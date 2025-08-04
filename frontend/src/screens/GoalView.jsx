@@ -28,9 +28,9 @@ export default function GoalView() {
             {progress.learned}/{progress.total}
           </span>
         </div>
-        <div className="w-full bg-gray-200 rounded">
+        <div className="w-full bg-secondary rounded">
           <div
-            className="bg-green-500 text-xs leading-none py-1 text-center text-white rounded"
+            className="bg-accent-primary text-inverse text-xs leading-none py-1 text-center rounded"
             style={{ width: `${pct}%` }}
           >
             {pct}%

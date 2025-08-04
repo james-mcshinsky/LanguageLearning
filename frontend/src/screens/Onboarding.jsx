@@ -72,7 +72,7 @@ export default function Onboarding() {
                 key={name}
                 onClick={() => handleTemplate(name)}
                 className={`px-3 py-1 border rounded ${
-                  template === name ? 'bg-blue-500 text-white' : ''
+                  template === name ? 'bg-accent-primary text-inverse' : ''
                 }`}
               >
                 {name}
@@ -89,7 +89,7 @@ export default function Onboarding() {
           <div>
             <button
               onClick={startExtraction}
-              className="bg-blue-600 text-white px-4 py-2 rounded"
+              className="bg-accent-primary text-inverse px-4 py-2 rounded"
             >
               Next
             </button>
@@ -114,7 +114,7 @@ export default function Onboarding() {
           </ul>
           <button
             onClick={saveGoals}
-            className="bg-green-600 text-white px-4 py-2 rounded"
+            className="bg-accent-primary text-inverse px-4 py-2 rounded"
           >
             Save Goals
           </button>

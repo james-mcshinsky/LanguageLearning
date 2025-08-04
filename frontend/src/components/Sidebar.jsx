@@ -60,6 +60,18 @@ export default function Sidebar() {
           </li>
           <li>
             <NavLink
+              to="/vocabulary"
+              className={({ isActive }) =>
+                `block px-xs py-xxs rounded hover:bg-white/5 focus:bg-white/5 focus:outline-none ${
+                  isActive ? 'active' : ''
+                }`
+              }
+            >
+              Vocabulary
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
               to="/analytics"
               className={({ isActive }) =>
                 `block px-xs py-xxs rounded hover:bg-white/5 focus:bg-white/5 focus:outline-none ${

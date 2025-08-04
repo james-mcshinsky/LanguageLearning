@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { apiClient } from '../services/api';
+import Button from '../components/ui/Button';
+import Input from '../components/ui/Input';
+import Card from '../components/ui/Card';
 
 export default function Learn() {
   const [queue, setQueue] = useState([]);
@@ -98,7 +101,7 @@ export default function Learn() {
 
   if (isLoading) {
     return (
-      <div className="p-4" aria-live="polite">
+      <div className="p-md" aria-live="polite">
         <p>Loading...</p>
       </div>
     );
@@ -106,7 +109,7 @@ export default function Learn() {
 
   if (error) {
     return (
-      <div className="p-4" aria-live="polite">
+      <div className="p-md" aria-live="polite">
         <p>{error}</p>
       </div>
     );
@@ -114,19 +117,19 @@ export default function Learn() {
 
   if (!current) {
     return (
-      <div className="p-4" aria-live="polite">
+      <div className="p-md" aria-live="polite">
         <h1 className="text-2xl font-bold">Learn</h1>
-        <p className="mt-4">No items due.</p>
+        <p className="mt-md">No items due.</p>
       </div>
     );
   }
 
   return (
-    <div className="p-4" aria-live="polite">
+    <div className="p-md" aria-live="polite">
       <h1 className="text-2xl font-bold">Learn</h1>
 
       {current.type === 'mcq' && (
-        <div className="mt-4">
+        <Card className="mt-md">
           <p id="mcq-question">{current.question}</p>
           <div
             role="radiogroup"
@@ -134,47 +137,44 @@ export default function Learn() {
             aria-describedby="mcq-instructions"
           >
             {current.choices.map((c, idx) => (
-              <button
+              <Button
                 key={idx}
                 role="radio"
                 aria-checked="false"
                 onClick={() => handleMCQ(idx)}
-                className="block mt-2 p-2 border rounded focus:outline focus:outline-2 focus:outline-offset-2"
+                variant="outline"
+                className="block mt-sm w-full text-left"
               >
                 {c}
-              </button>
+              </Button>
             ))}
           </div>
           <p id="mcq-instructions" className="text-sm text-gray-600">
             Use Tab to focus an answer and Enter to select.
           </p>
-        </div>
+        </Card>
       )}
 
       {current.type === 'fill_blank' && (
-        <div className="mt-4">
+        <Card className="mt-md">
           <p id="fill-sentence">{current.sentence}</p>
           <label htmlFor="fill-input" className="block mt-2">
             Your answer
           </label>
-          <input
+          <Input
             id="fill-input"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            className="border p-1 focus:outline focus:outline-2 focus:outline-offset-2"
             aria-labelledby="fill-sentence"
           />
-          <button
-            onClick={handleFillBlank}
-            className="ml-2 p-1 border rounded focus:outline focus:outline-2 focus:outline-offset-2"
-          >
+          <Button onClick={handleFillBlank} className="ml-sm mt-sm" variant="outline">
             Submit
-          </button>
-        </div>
+          </Button>
+        </Card>
       )}
 
       {current.type === 'matching' && (
-        <div className="mt-4">
+        <Card className="mt-md">
           <p>Drag the word to its match:</p>
           <div className="flex space-x-4 mt-2">
             <div
@@ -197,25 +197,22 @@ export default function Learn() {
               </div>
             ))}
           </div>
-        </div>
+        </Card>
       )}
 
       {current.type === 'grammar_tip' && (
-        <div className="mt-4">
+        <Card className="mt-md">
           <p className="italic">{current.tip}</p>
-          <button
-            onClick={next}
-            className="mt-2 p-1 border rounded focus:outline focus:outline-2 focus:outline-offset-2"
-          >
+          <Button onClick={next} className="mt-sm" variant="outline">
             Next
-          </button>
-        </div>
+          </Button>
+        </Card>
       )}
 
       {feedback.message && (
         <div
           key={index}
-          className={`mt-4 flex items-center p-2 rounded transition-all duration-300 transform ${
+          className={`mt-md flex items-center p-sm rounded transition-all duration-300 transform ${
             animateFeedback
               ? 'opacity-100 translate-y-0'
               : 'opacity-0 -translate-y-2'

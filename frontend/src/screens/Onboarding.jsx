@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { apiClient } from '../services/api';
+import Button from '../components/ui/Button';
+import Input from '../components/ui/Input';
+import Card from '../components/ui/Card';
 
 const TEMPLATE_TEXT = {
   books: 'Read books in your target language to expand vocabulary and comprehension.',
@@ -72,98 +75,91 @@ export default function Onboarding() {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-md">
       <div aria-live="polite">
         {isLoading && <p>Loading...</p>}
         {error && <p>{error}</p>}
       </div>
       {step === 1 && (
-        <div>
-          <h1 className="text-2xl font-bold mb-4">Choose your first goal</h1>
+        <Card>
+          <h1 className="text-2xl font-bold mb-md">Choose your first goal</h1>
           <div
-            className="space-x-2 mb-2"
+            className="space-x-sm mb-sm"
             role="group"
             aria-label="Goal templates"
             aria-describedby="template-instructions"
           >
             {Object.keys(TEMPLATE_TEXT).map((name) => (
-              <button
+              <Button
                 key={name}
+                variant={template === name ? 'primary' : 'outline'}
                 onClick={() => handleTemplate(name)}
-                className={`px-3 py-1 border rounded focus:outline focus:outline-2 focus:outline-offset-2 ${
-                  template === name ? 'bg-accent-primary text-inverse' : ''
-                }`}
                 aria-label={`Use ${name} template`}
+                className="mr-sm"
               >
                 {name}
-              </button>
+              </Button>
             ))}
           </div>
-          <p id="template-instructions" className="text-sm text-gray-600 mb-4">
+          <p id="template-instructions" className="text-sm text-gray-600 mb-md">
             Use Tab to focus template buttons and Enter to select.
           </p>
-          <label htmlFor="goal-text" className="block mb-1">
+          <label htmlFor="goal-text" className="block mb-xs">
             Enter or paste your own text
           </label>
-          <textarea
+          <Input
+            as="textarea"
             id="goal-text"
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="Or enter your own text"
-            className="w-full border p-2 mb-2 h-40 focus:outline focus:outline-2 focus:outline-offset-2"
+            className="w-full mb-sm h-40"
           />
-          <label htmlFor="goal-file" className="block mb-1">
+          <label htmlFor="goal-file" className="block mb-xs">
             Upload a text file
           </label>
-          <input
+          <Input
             id="goal-file"
             type="file"
             accept=".txt"
             onChange={handleFile}
-            className="mb-4 focus:outline focus:outline-2 focus:outline-offset-2"
+            className="mb-md"
           />
           <div>
-            <button
-              onClick={startExtraction}
-              disabled={isLoading}
-              className="bg-accent-primary text-inverse px-4 py-2 rounded focus:outline focus:outline-2 focus:outline-offset-2"
-            >
+            <Button onClick={startExtraction} disabled={isLoading}>
               Next
-            </button>
+            </Button>
           </div>
-        </div>
+        </Card>
       )}
 
       {step === 2 && (
-        <div>
-          <h2 className="text-xl font-bold mb-4">Select words to learn</h2>
-          <ul className="mb-4">
+        <Card>
+          <h2 className="text-xl font-bold mb-md">Select words to learn</h2>
+          <ul className="mb-md">
             {vocab.map((word) => (
-              <li key={word} className="flex items-center mb-1">
+              <li key={word} className="flex items-center mb-xs">
                 <input
                   type="checkbox"
                   checked={selected.includes(word)}
                   onChange={() => toggleWord(word)}
+                  className="mr-xs"
                 />
-                <span className="ml-2">{word}</span>
+                <span>{word}</span>
               </li>
             ))}
           </ul>
-          <button
-            onClick={saveGoals}
-            disabled={isLoading}
-            className="bg-accent-primary text-inverse px-4 py-2 rounded focus:outline focus:outline-2 focus:outline-offset-2"
-          >
+          <Button onClick={saveGoals} disabled={isLoading}>
             Save Goals
-          </button>
-        </div>
+          </Button>
+        </Card>
       )}
 
       {step === 3 && (
-        <div>
-          <h2 className="text-xl font-bold mb-2">Goals saved!</h2>
+        <Card>
+          <h2 className="text-xl font-bold mb-sm">Goals saved!</h2>
           <p>You are ready to start learning.</p>
-        </div>
+        </Card>
       )}
     </div>
   );

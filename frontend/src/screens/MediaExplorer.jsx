@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import Button from '../components/ui/Button';
+import Input from '../components/ui/Input';
+import Card from '../components/ui/Card';
 
 // Simple media explorer showing suggested media items and an AI blurb generator.
 export default function MediaExplorer() {
@@ -80,54 +83,42 @@ export default function MediaExplorer() {
   }
 
   return (
-    <div className="p-4 space-y-6">
+    <div className="p-md space-y-lg">
       <h1 className="text-2xl font-bold">Media Explorer</h1>
 
-      <div className="space-x-2">
-        <input
-          className="border p-1"
+      <div className="space-x-sm">
+        <Input
           value={queryWord}
           onChange={(e) => setQueryWord(e.target.value)}
           placeholder="word"
         />
-        <input
-          className="border p-1 w-16"
+        <Input
+          className="w-16"
           type="number"
           value={level}
           onChange={(e) => setLevel(Number(e.target.value))}
         />
-        <button className="px-2 py-1 bg-accent-primary text-inverse" onClick={fetchMedia}>
-          Load
-        </button>
+        <Button onClick={fetchMedia}>Load</Button>
       </div>
 
       {item && (
-        <div className="space-y-2">
-          <div className="flex space-x-2">
-            <button onClick={prev} className="px-2 py-1 bg-secondary">
+        <Card className="space-y-sm">
+          <div className="flex space-x-sm">
+            <Button onClick={prev} variant="secondary">
               Prev
-            </button>
-            <button onClick={next} className="px-2 py-1 bg-secondary">
+            </Button>
+            <Button onClick={next} variant="secondary">
               Next
-            </button>
-            <button
-              onClick={() => setShowCaptions((v) => !v)}
-              className="px-2 py-1 bg-secondary"
-            >
+            </Button>
+            <Button onClick={() => setShowCaptions((v) => !v)} variant="secondary">
               {showCaptions ? 'Hide Captions' : 'Show Captions'}
-            </button>
-            <button
-              onClick={() => setFontSize((s) => Math.max(8, s - 2))}
-              className="px-2 py-1 bg-secondary"
-            >
+            </Button>
+            <Button onClick={() => setFontSize((s) => Math.max(8, s - 2))} variant="secondary">
               A-
-            </button>
-            <button
-              onClick={() => setFontSize((s) => s + 2)}
-              className="px-2 py-1 bg-secondary"
-            >
+            </Button>
+            <Button onClick={() => setFontSize((s) => s + 2)} variant="secondary">
               A+
-            </button>
+            </Button>
           </div>
 
           {item.video && (
@@ -150,26 +141,26 @@ export default function MediaExplorer() {
               ))}
             </div>
           )}
-        </div>
+        </Card>
       )}
 
-      <div className="mt-8">
+      <div className="mt-lg">
         <h2 className="text-xl font-semibold">AI Blurb Generator</h2>
-        <div className="space-y-2">
-          <input
-            className="border p-1 w-full"
+        <Card className="space-y-sm mt-sm">
+          <Input
+            className="w-full"
             placeholder="Known words (comma separated)"
             value={knownWords}
             onChange={(e) => setKnownWords(e.target.value)}
           />
-          <input
-            className="border p-1 w-full"
+          <Input
+            className="w-full"
             placeholder="L+1 words (comma separated)"
             value={lPlusWords}
             onChange={(e) => setLPlusWords(e.target.value)}
           />
-          <div className="flex items-center space-x-2">
-            <input
+          <div className="flex items-center space-x-sm">
+            <Input
               type="range"
               min="1"
               max="50"
@@ -178,14 +169,9 @@ export default function MediaExplorer() {
             />
             <span>{blurbLength} words</span>
           </div>
-          <button
-            className="px-2 py-1 bg-accent-primary text-inverse"
-            onClick={generateBlurb}
-          >
-            Generate
-          </button>
-          {blurb && <p className="mt-2">{blurb}</p>}
-        </div>
+          <Button onClick={generateBlurb}>Generate</Button>
+          {blurb && <p className="mt-sm">{blurb}</p>}
+        </Card>
       </div>
     </div>
   );

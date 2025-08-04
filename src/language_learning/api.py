@@ -34,8 +34,8 @@ class LessonPromptsIn(BaseModel):
 
 
 class BlurbIn(BaseModel):
-    known_words: List[str] = []
-    l_plus_one_words: List[str] = []
+    known_words: List[str] | None = None
+    l_plus_one_words: List[str] | None = None
     length: int = 0
 
 

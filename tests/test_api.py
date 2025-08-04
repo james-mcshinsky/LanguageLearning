@@ -3,6 +3,7 @@ from fastapi.testclient import TestClient
 
 from language_learning.api import create_app
 from language_learning.storage import JSONStorage
+from language_learning.vocabulary import get_top_coca_words
 
 
 def _make_client(tmp_path):
@@ -52,3 +53,12 @@ def test_lesson_and_media_endpoints(tmp_path):
     assert resp.status_code == 200
     items = resp.json()
     assert items and all(item["level"] == 2 for item in items)
+
+
+def test_blurb_defaults_to_coca(tmp_path):
+    client, _ = _make_client(tmp_path)
+
+    resp = client.post("/blurb", json={"length": 3})
+    assert resp.status_code == 200
+    words = resp.json()["blurb"].split()
+    assert words == get_top_coca_words(3)

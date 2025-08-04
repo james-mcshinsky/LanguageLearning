@@ -33,6 +33,11 @@ export default function Layout({ children }) {
             <span className="block w-6 h-0.5 bg-current" />
           </Button>
         </div>
+        <img
+          src="/fluent-milestones-logo.svg"
+          alt="Fluent Milestones logo"
+          className="h-8 w-auto"
+        />
         <NavLink
           to="/onboarding"
           className="button-secondary focus:outline focus:outline-2 focus:outline-offset-2"

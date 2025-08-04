@@ -70,6 +70,30 @@ export default function Sidebar() {
               Vocabulary
             </NavLink>
           </li>
+          <li>
+            <NavLink
+              to="/learn"
+              className={({ isActive }) =>
+                `block px-xs py-xxs rounded hover:bg-white/5 focus:bg-white/5 focus:outline-none ${
+                  isActive ? 'active' : ''
+                }`
+              }
+            >
+              Tutor
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/media"
+              className={({ isActive }) =>
+                `block px-xs py-xxs rounded hover:bg-white/5 focus:bg-white/5 focus:outline-none ${
+                  isActive ? 'active' : ''
+                }`
+              }
+            >
+              Media Library
+            </NavLink>
+          </li>
         </ul>
       </nav>
       <div>

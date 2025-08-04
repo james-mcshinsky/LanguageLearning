@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
 import Sidebar from './Sidebar.jsx';
 import Button from './ui/Button';
 import UserSettings from './UserSettings.jsx';
-
-const navItems = [{ path: '/dashboard', label: 'Dashboard' }];
 
 export default function Layout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -21,7 +18,7 @@ export default function Layout({ children }) {
         Skip to main content
       </a>
       <header className="site-header">
-        <div className="flex items-center space-x-m">
+        <div className="flex items-center">
           <Button
             type="button"
             onClick={toggleSidebar}
@@ -34,21 +31,6 @@ export default function Layout({ children }) {
             <span className="block w-6 h-0.5 bg-current my-1" />
             <span className="block w-6 h-0.5 bg-current" />
           </Button>
-          <nav className="flex space-x-m">
-            {navItems.map((item) => (
-              <NavLink
-                key={item.path}
-                to={item.path}
-                className={({ isActive }) =>
-                  `px-xs py-xxs rounded hover:bg-white/5 focus:bg-white/5 focus:outline-none ${
-                    isActive ? 'active' : ''
-                  }`
-                }
-              >
-                {item.label}
-              </NavLink>
-            ))}
-          </nav>
         </div>
         <Button
           type="button"

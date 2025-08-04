@@ -36,6 +36,18 @@ export default function Sidebar() {
         <ul className="space-y-2">
           <li>
             <NavLink
+              to="/dashboard"
+              className={({ isActive }) =>
+                `block px-xs py-xxs rounded hover:bg-white/5 focus:bg-white/5 focus:outline-none ${
+                  isActive ? 'active' : ''
+                }`
+              }
+            >
+              Dashboard
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
               to="/onboarding"
               className={({ isActive }) =>
                 `block px-xs py-xxs rounded hover:bg-white/5 focus:bg-white/5 focus:outline-none ${

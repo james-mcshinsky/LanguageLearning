@@ -3,7 +3,7 @@ import Button from './Button';
 
 function Card({ className = '', children, ...props }) {
   const base =
-    'bg-white border border-[#E5F9CE] rounded-[0.75rem] p-[1.5rem] text-[#5D5D5D] [&_h1]:font-semibold [&_h1]:text-[#072F45] [&_h2]:font-semibold [&_h2]:text-[#072F45] [&_h3]:font-semibold [&_h3]:text-[#072F45]';
+    'bg-white border border-primary-light rounded-[0.75rem] p-[1.5rem] text-text-secondary [&_h1]:font-semibold [&_h1]:text-[var(--color-accent-dark)] [&_h2]:font-semibold [&_h2]:text-[var(--color-accent-dark)] [&_h3]:font-semibold [&_h3]:text-[var(--color-accent-dark)]';
   return (
     <div className={`${base} ${className}`} {...props}>
       {children}

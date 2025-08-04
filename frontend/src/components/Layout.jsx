@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import Sidebar from './Sidebar.jsx';
 
 const navItems = [
@@ -23,13 +23,17 @@ export default function Layout({ children }) {
       <header className="bg-secondary text-primary p-4 flex justify-between items-center col-span-2">
         <nav className="flex space-x-4">
           {navItems.map((item) => (
-            <Link
+            <NavLink
               key={item.path}
               to={item.path}
-              className="px-2 py-1 rounded hover:bg-white/5 focus:bg-white/5 focus:outline-none"
+              className={({ isActive }) =>
+                `px-2 py-1 rounded hover:bg-white/5 focus:bg-white/5 focus:outline-none ${
+                  isActive ? 'active' : ''
+                }`
+              }
             >
               {item.label}
-            </Link>
+            </NavLink>
           ))}
         </nav>
         <button

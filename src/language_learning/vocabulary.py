@@ -37,6 +37,31 @@ def _load_coca_counts(coca_path: str) -> Counter:
     return counts
 
 
+def get_top_coca_words(count: int = 5) -> list[str]:
+    """Return the first ``count`` words from the COCA frequency list.
+
+    The function reads the ``coca.csv`` file located alongside this module
+    and normalizes all words to lowercase. If the file cannot be found,
+    an empty list is returned.
+    """
+
+    coca_file = Path(__file__).with_name("coca.csv")
+    words: list[str] = []
+    try:
+        with coca_file.open("r", encoding="utf-8") as f:
+            reader = csv.reader(f)
+            for row in reader:
+                if not row:
+                    continue
+                words.append(row[0].strip().lower())
+                if len(words) >= count:
+                    break
+    except FileNotFoundError:
+        return []
+
+    return words
+
+
 def extract_vocabulary(
     corpus_path: str,
     goals: Optional[GoalManager] = None,

@@ -1,5 +1,6 @@
 import pytest
 
+from language_learning import get_top_coca_words
 from language_learning.vocabulary import CorpusReadError, extract_vocabulary
 from language_learning.goals import GoalManager, GoalItem
 
@@ -51,3 +52,7 @@ def test_extract_vocabulary_goal_weight_with_coca(tmp_path):
     manager.create_goal(GoalItem(word="beta", weight=200))
     ranked = extract_vocabulary(str(corpus), manager, coca_path=str(coca))
     assert ranked[0] == "beta"
+
+
+def test_get_top_coca_words():
+    assert get_top_coca_words(3) == ["you", "i", "the"]

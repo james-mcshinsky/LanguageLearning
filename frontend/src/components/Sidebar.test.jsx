@@ -46,6 +46,10 @@ describe('Sidebar', () => {
     expect(screen.getByRole('link', { name: /dashboard/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /goals/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /vocabulary/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /tutor/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: /media library/i })
+    ).toBeInTheDocument();
     expect(screen.queryByRole('link', { name: /analytics/i })).not.toBeInTheDocument();
   });
 
@@ -58,5 +62,27 @@ describe('Sidebar', () => {
     const vocabLink = screen.getByRole('link', { name: /vocabulary/i });
     expect(vocabLink).toBeInTheDocument();
     expect(vocabLink).toHaveAttribute('href', '/vocabulary');
+  });
+
+  test('includes link to tutor page', () => {
+    render(
+      <MemoryRouter>
+        <Sidebar />
+      </MemoryRouter>
+    );
+    const tutorLink = screen.getByRole('link', { name: /tutor/i });
+    expect(tutorLink).toBeInTheDocument();
+    expect(tutorLink).toHaveAttribute('href', '/learn');
+  });
+
+  test('includes link to media library page', () => {
+    render(
+      <MemoryRouter>
+        <Sidebar />
+      </MemoryRouter>
+    );
+    const mediaLink = screen.getByRole('link', { name: /media library/i });
+    expect(mediaLink).toBeInTheDocument();
+    expect(mediaLink).toHaveAttribute('href', '/media');
   });
 });

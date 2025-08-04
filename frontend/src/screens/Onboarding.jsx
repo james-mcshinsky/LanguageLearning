@@ -47,7 +47,7 @@ export default function Onboarding() {
       setSelected(result.vocab || []);
       setStep(2);
     } catch (err) {
-      setError('Failed to extract vocabulary.');
+      setError(err.message);
     } finally {
       setIsLoading(false);
     }
@@ -63,7 +63,7 @@ export default function Onboarding() {
       });
       setStep(3);
     } catch (err) {
-      setError('Failed to save goals.');
+      setError(err.message);
     } finally {
       setIsLoading(false);
     }

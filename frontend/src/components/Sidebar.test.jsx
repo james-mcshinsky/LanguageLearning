@@ -27,7 +27,10 @@ describe('Sidebar', () => {
         <Sidebar />
       </MemoryRouter>
     );
-    expect(fetch).toHaveBeenCalledWith('/api/user/stats');
+    expect(fetch).toHaveBeenCalledWith(
+      '/api/user/stats',
+      expect.objectContaining({ method: 'GET' })
+    );
     await waitFor(() => {
       expect(screen.getByText('Stats')).toBeInTheDocument();
       expect(screen.getByText('🔥 3')).toBeInTheDocument();

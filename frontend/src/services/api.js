@@ -10,7 +10,12 @@ export async function apiClient(endpoint, { method = 'GET', body, headers } = {}
     ...(body ? { body: JSON.stringify(body) } : {}),
   };
 
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+  let response;
+  try {
+    response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+  } catch (err) {
+    throw new Error('Network request failed');
+  }
   if (!response.ok) {
     const text = await response.text();
     throw new Error(text || 'API request failed');

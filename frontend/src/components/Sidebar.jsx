@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import StatusMessage from './StatusMessage.jsx';
+import { apiClient } from '../services/api.js';
 
 export default function Sidebar() {
   const [stats, setStats] = useState({ streak: 0, lingots: 0 });
@@ -10,9 +11,7 @@ export default function Sidebar() {
     let ignore = false;
     async function loadStats() {
       try {
-        const res = await fetch('/api/user/stats');
-        if (!res.ok) throw new Error('Failed to load');
-        const data = await res.json();
+        const data = await apiClient('/user/stats');
         if (!ignore) {
           setStats({
             streak: data.streak ?? 0,
@@ -21,7 +20,7 @@ export default function Sidebar() {
         }
       } catch (err) {
         if (!ignore) {
-          setError('Unable to load stats');
+          setError(err.message);
         }
       }
     }

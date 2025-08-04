@@ -58,7 +58,7 @@ export default function Layout({ children }) {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="w-6 h-6"
+            className={`w-6 h-6 ${settingsOpen ? 'text-accent' : 'text-text-secondary'}`}
           >
             <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.088c1.543.94 1.031 3.28-.772 3.58a1.724 1.724 0 000 3.03c1.803.3 2.315 2.64.772 3.58a1.724 1.724 0 00-2.573 1.089c-.426 1.755-2.924 1.755-3.35 0a1.724 1.724 0 00-2.573-1.09c-1.543-.939-1.031-3.279.772-3.579a1.724 1.724 0 000-3.031c-1.803-.3-2.315-2.64-.772-3.58a1.724 1.724 0 002.573-1.088z" />
             <circle cx="12" cy="12" r="3" />

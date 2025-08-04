@@ -2,7 +2,12 @@ from datetime import datetime, timedelta
 
 import pytest
 
-from language_learning.spaced_repetition import SRSFilter, SpacedRepetitionScheduler
+from language_learning.spaced_repetition import (
+    SRSFilter,
+    SpacedRepetitionScheduler,
+    default_srs_filter,
+)
+from language_learning.vocabulary import get_top_coca_words
 
 
 def test_review_progress():
@@ -41,10 +46,21 @@ def test_srs_filter_pop_and_persistence(tmp_path):
     assert loaded.pop_next_due() == "banana"
 
 
-def test_load_state_missing_file_returns_empty(tmp_path):
+def test_load_state_missing_file_returns_default(tmp_path):
     path = tmp_path / "missing.json"
     filt = SRSFilter.load_state(path)
-    assert filt.schedulers == {}
+    words = get_top_coca_words()
+    assert list(filt.goal_frequency_ranks.keys()) == words
+    for rank, word in enumerate(words, start=1):
+        assert filt.goal_frequency_ranks[word] == rank
+
+
+def test_default_srs_filter_contains_top_words():
+    filt = default_srs_filter()
+    words = get_top_coca_words()
+    assert list(filt.goal_frequency_ranks.keys()) == words
+    for rank, word in enumerate(words, start=1):
+        assert filt.goal_frequency_ranks[word] == rank
 
 
 def test_load_state_invalid_json_raises(tmp_path):

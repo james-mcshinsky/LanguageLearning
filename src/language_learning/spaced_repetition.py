@@ -7,6 +7,8 @@ from datetime import datetime, timedelta
 from typing import Dict, Optional
 import json
 
+from .vocabulary import get_top_coca_words
+
 
 @dataclass
 class ReviewState:
@@ -55,7 +57,8 @@ class SRSFilter:
     ``goal_frequency_rank``.  Lower ranks indicate higher frequency.
 
     Items can be serialised to and from JSON using :meth:`save_state` and
-    :meth:`load_state`.
+    :meth:`load_state`.  To obtain a filter pre-populated with common vocabulary
+    use :func:`default_srs_filter`.
     """
 
     def __init__(self, goal_frequency_ranks: Dict[str, int]) -> None:
@@ -86,16 +89,17 @@ class SRSFilter:
     def load_state(cls, path: str) -> "SRSFilter":
         """Load review state from *path* and return a new ``SRSFilter``.
 
-        If *path* does not exist an empty ``SRSFilter`` is returned.  If the
-        file cannot be parsed or is otherwise malformed a :class:`ValueError`
-        is raised with a descriptive message.
+        If *path* does not exist a default filter seeded with the five most
+        frequent COCA words is returned.  If the file cannot be parsed or is
+        otherwise malformed a :class:`ValueError` is raised with a descriptive
+        message.
         """
 
         try:
             with open(path, "r", encoding="utf-8") as fh:
                 data = json.load(fh)
         except FileNotFoundError:
-            return cls({})
+            return default_srs_filter()
         except json.JSONDecodeError as exc:  # pragma: no cover - defensive
             raise ValueError(f"Invalid SRS state file {path!s}: {exc}") from exc
         except OSError as exc:  # pragma: no cover - defensive
@@ -163,6 +167,18 @@ class SRSFilter:
                 best_score = score
                 best_word = word
         return best_word
+
+
+def default_srs_filter() -> "SRSFilter":
+    """Return a default :class:`SRSFilter` seeded with common vocabulary.
+
+    The filter includes the five most frequent words from the COCA frequency
+    list with ``goal_frequency_ranks`` of ``1`` through ``5`` in order.
+    """
+
+    words = get_top_coca_words(5)
+    ranks = {word: rank for rank, word in enumerate(words, start=1)}
+    return SRSFilter(ranks)
 
 
 if __name__ == "__main__":  # pragma: no cover - example usage

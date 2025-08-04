@@ -7,6 +7,8 @@ import random
 
 import requests
 
+from .vocabulary import get_top_coca_words
+
 
 def generate_lesson(topic: str, vocabulary: Optional[List[str]] = None) -> Dict[str, object]:
     """Return a minimal lesson plan for *topic*.
@@ -21,7 +23,7 @@ def generate_lesson(topic: str, vocabulary: Optional[List[str]] = None) -> Dict[
     lesson = {
         "topic": topic,
         "introduction": f"Today's lesson covers {topic}.",
-        "vocabulary": vocabulary or [],
+        "vocabulary": vocabulary or get_top_coca_words(),
         "exercise": f"Use {topic} in a sentence.",
     }
     return lesson

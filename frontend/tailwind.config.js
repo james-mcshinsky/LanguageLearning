@@ -7,14 +7,16 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        bg: "var(--bg-primary)",
-        text: "var(--text-primary)",
-        primary: "var(--text-primary)",
-        secondary: "var(--bg-secondary)",
-        "text-secondary": "var(--text-secondary)",
-        "accent-primary": "var(--accent-primary)",
-        "accent-secondary": "var(--accent-secondary)",
-        inverse: "var(--text-inverse)",
+        primary: "var(--color-primary)",
+        "primary-light": "var(--color-primary-light)",
+        accent: "var(--color-accent)",
+        bg: "var(--color-bg)",
+        surface: "var(--color-surface)",
+        text: "var(--color-text-primary)",
+        "text-secondary": "var(--color-text-secondary)",
+        success: "var(--color-success)",
+        danger: "var(--color-danger)",
+        inverse: "var(--color-inverse)",
       },
       spacing: {
         xs: "var(--space-xs)",

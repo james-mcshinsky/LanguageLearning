@@ -14,9 +14,9 @@ export default function ProgressOverview({ heading, progress, next }) {
             {progress.learned}/{progress.total}
           </span>
         </div>
-        <div className="w-full bg-secondary rounded">
+        <div className="w-full bg-surface rounded">
           <div
-            className="bg-accent-primary text-inverse text-xs leading-none py-1 text-center rounded"
+            className="bg-success text-inverse text-xs leading-none py-1 text-center rounded"
             style={{ width: `${pct}%` }}
           >
             {pct}%

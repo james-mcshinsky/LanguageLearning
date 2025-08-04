@@ -217,7 +217,7 @@ export default function Learn() {
               ? 'opacity-100 translate-y-0'
               : 'opacity-0 -translate-y-2'
           } ${
-            feedback.isCorrect ? 'bg-accent-primary' : 'bg-accent-secondary'
+            feedback.isCorrect ? 'bg-success' : 'bg-danger'
           } text-inverse`}
         >
           <span className="mr-2" aria-hidden="true">

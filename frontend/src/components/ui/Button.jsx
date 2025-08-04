@@ -2,8 +2,8 @@ import React from 'react';
 
 const base = 'px-md py-sm rounded focus:outline focus:outline-2 focus:outline-offset-2';
 const variants = {
-  primary: 'bg-accent-primary text-inverse',
-  secondary: 'bg-secondary text-text',
+  primary: 'bg-primary text-text',
+  secondary: 'bg-success text-inverse',
   outline: 'border',
 };
 

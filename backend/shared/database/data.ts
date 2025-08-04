@@ -1,5 +1,11 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient, GetCommand, PutCommand } from '@aws-sdk/lib-dynamodb';
+import {
+  DynamoDBDocumentClient,
+  GetCommand,
+  PutCommand,
+  ScanCommand,
+  DeleteCommand,
+} from '@aws-sdk/lib-dynamodb';
 import { runPython } from '../utils';
 
 const TABLE_NAME = process.env.DATA_TABLE || 'language-learning-data';
@@ -54,4 +60,83 @@ export async function loadDefaultCocaWords(): Promise<string[]> {
     "import json\nfrom language_learning.goals import load_default_goals\nprint(json.dumps([g.word for g in load_default_goals()]))",
   );
   return result || [];
+}
+
+const USERS_PREFIX = 'user#';
+
+export type UserRecord = {
+  id: number;
+  username: string;
+  passwordHash: string;
+};
+
+export async function createUser(
+  username: string,
+  passwordHash: string,
+): Promise<UserRecord> {
+  const id = Date.now();
+  const user: UserRecord = { id, username, passwordHash };
+  await dynamo.send(
+    new PutCommand({
+      TableName: TABLE_NAME,
+      Item: { pk: `${USERS_PREFIX}${id}`, data: user },
+    }),
+  );
+  return user;
+}
+
+export async function getUserById(id: number): Promise<UserRecord | null> {
+  const res = await dynamo.send(
+    new GetCommand({ TableName: TABLE_NAME, Key: { pk: `${USERS_PREFIX}${id}` } }),
+  );
+  return (res.Item?.data as UserRecord) || null;
+}
+
+export async function getUserByUsername(
+  username: string,
+): Promise<UserRecord | null> {
+  const res = await dynamo.send(
+    new ScanCommand({
+      TableName: TABLE_NAME,
+      FilterExpression: 'begins_with(pk, :prefix) AND data.username = :username',
+      ExpressionAttributeValues: {
+        ':prefix': USERS_PREFIX,
+        ':username': username,
+      },
+      Limit: 1,
+    }),
+  );
+  const item = res.Items?.[0];
+  return (item?.data as UserRecord) || null;
+}
+
+export async function listUsers(): Promise<Omit<UserRecord, 'passwordHash'>[]> {
+  const res = await dynamo.send(
+    new ScanCommand({
+      TableName: TABLE_NAME,
+      FilterExpression: 'begins_with(pk, :prefix)',
+      ExpressionAttributeValues: { ':prefix': USERS_PREFIX },
+    }),
+  );
+  return (
+    res.Items?.map((item) => {
+      const { passwordHash, ...rest } = item.data as UserRecord;
+      return rest;
+    }) || []
+  );
+}
+
+export async function saveUser(user: UserRecord) {
+  await dynamo.send(
+    new PutCommand({
+      TableName: TABLE_NAME,
+      Item: { pk: `${USERS_PREFIX}${user.id}`, data: user },
+    }),
+  );
+}
+
+export async function deleteUser(id: number) {
+  await dynamo.send(
+    new DeleteCommand({ TableName: TABLE_NAME, Key: { pk: `${USERS_PREFIX}${id}` } }),
+  );
 }

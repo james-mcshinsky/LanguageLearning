@@ -13,7 +13,8 @@ export default function AppNavigator() {
     <Router>
       <Layout>
         <Routes>
-          <Route path="/" element={<Onboarding />} />
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/onboarding" element={<Onboarding />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/learn" element={<Learn />} />
           <Route path="/media" element={<MediaExplorer />} />

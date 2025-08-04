@@ -15,6 +15,9 @@ export async function apiClient(endpoint, { method = 'GET', body, headers } = {}
     const text = await response.text();
     throw new Error(text || 'API request failed');
   }
+  if (response.status === 204) {
+    return null;
+  }
   return response.json();
 }
 
@@ -43,3 +46,14 @@ export const generateBlurb = (
       length,
     },
   });
+
+export const fetchGoals = () => apiClient('/goals');
+
+export const addGoal = (word, weight) =>
+  apiClient('/goals', {
+    method: 'POST',
+    body: { word, ...(weight ? { weight } : {}) },
+  });
+
+export const deleteGoal = (word) =>
+  apiClient(`/goals/${encodeURIComponent(word)}`, { method: 'DELETE' });

@@ -13,6 +13,8 @@ export default function Onboarding() {
   const [template, setTemplate] = useState('');
   const [vocab, setVocab] = useState([]);
   const [selected, setSelected] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleTemplate = (name) => {
     setTemplate(name);
@@ -31,6 +33,8 @@ export default function Onboarding() {
     const payload = text.trim();
     if (!payload) return;
     try {
+      setIsLoading(true);
+      setError(null);
       const result = await apiClient('/goals/extract', {
         method: 'POST',
         body: { text: payload },
@@ -39,19 +43,25 @@ export default function Onboarding() {
       setSelected(result.vocab || []);
       setStep(2);
     } catch (err) {
-      console.error(err);
+      setError('Failed to extract vocabulary.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const saveGoals = async () => {
     try {
+      setIsLoading(true);
+      setError(null);
       await apiClient('/goals/bulk', {
         method: 'POST',
         body: { items: selected.map((w) => ({ word: w })) },
       });
       setStep(3);
     } catch (err) {
-      console.error(err);
+      setError('Failed to save goals.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -63,6 +73,10 @@ export default function Onboarding() {
 
   return (
     <div className="p-4">
+      <div aria-live="polite">
+        {isLoading && <p>Loading...</p>}
+        {error && <p>{error}</p>}
+      </div>
       {step === 1 && (
         <div>
           <h1 className="text-2xl font-bold mb-4">Choose your first goal</h1>
@@ -89,6 +103,7 @@ export default function Onboarding() {
           <div>
             <button
               onClick={startExtraction}
+              disabled={isLoading}
               className="bg-accent-primary text-inverse px-4 py-2 rounded"
             >
               Next
@@ -114,6 +129,7 @@ export default function Onboarding() {
           </ul>
           <button
             onClick={saveGoals}
+            disabled={isLoading}
             className="bg-accent-primary text-inverse px-4 py-2 rounded"
           >
             Save Goals

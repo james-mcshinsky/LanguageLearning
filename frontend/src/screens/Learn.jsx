@@ -6,14 +6,20 @@ export default function Learn() {
   const [index, setIndex] = useState(0);
   const [input, setInput] = useState('');
   const [feedback, setFeedback] = useState({ message: '', isCorrect: null });
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     async function load() {
       try {
+        setIsLoading(true);
+        setError(null);
         const data = await apiClient('/lesson/queue');
         setQueue(data.queue || []);
       } catch (err) {
-        console.error(err);
+        setError('Unable to load lesson.');
+      } finally {
+        setIsLoading(false);
       }
     }
     load();
@@ -23,12 +29,13 @@ export default function Learn() {
 
   const sendReview = async (word, quality) => {
     try {
+      setError(null);
       await apiClient('/lesson/review', {
         method: 'POST',
         body: { word, quality },
       });
     } catch (err) {
-      console.error(err);
+      setError('Failed to submit review.');
     }
   };
 
@@ -79,9 +86,25 @@ export default function Learn() {
     }, 1000);
   };
 
+  if (isLoading) {
+    return (
+      <div className="p-4" aria-live="polite">
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-4" aria-live="polite">
+        <p>{error}</p>
+      </div>
+    );
+  }
+
   if (!current) {
     return (
-      <div className="p-4">
+      <div className="p-4" aria-live="polite">
         <h1 className="text-2xl font-bold">Learn</h1>
         <p className="mt-4">No items due.</p>
       </div>
@@ -89,7 +112,7 @@ export default function Learn() {
   }
 
   return (
-    <div className="p-4">
+    <div className="p-4" aria-live="polite">
       <h1 className="text-2xl font-bold">Learn</h1>
 
       {current.type === 'mcq' && (

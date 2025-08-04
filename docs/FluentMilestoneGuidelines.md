@@ -1,4 +1,4 @@
-# GoalSpeak: AI-Powered, Goal-Driven Language Learning
+# Fluent Milestone Guidelines: AI-Powered, Goal-Driven Language Learning
 
 A reference overview of key business, product and technical details—meant to live alongside your code in the repo.
 

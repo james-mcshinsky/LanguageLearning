@@ -16,6 +16,10 @@ export default function ProgressOverview({ heading, progress, next }) {
         </div>
         <div className="w-full bg-surface rounded">
           <div
+            role="progressbar"
+            aria-valuenow={progress.learned}
+            aria-valuemin="0"
+            aria-valuemax={progress.total}
             className="bg-success text-inverse text-xs leading-none py-1 text-center rounded"
             style={{ width: `${pct}%` }}
           >

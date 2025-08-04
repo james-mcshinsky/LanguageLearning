@@ -35,12 +35,29 @@ cd frontend
 npm install
 ```
 
-### 3. Start Docker services
+### 3. Configure environment variables
+
+Copy the example files and provide your own API keys and service endpoints:
+
+```bash
+cp backend/.env.example backend/.env
+# edit backend/.env and set AZURE_OPENAI_API_KEY, AZURE_OPENAI_ENDPOINT, AZURE_OPENAI_DEPLOYMENT, etc.
+```
+
+Optionally create a `.env` file for the frontend if you need to override
+`VITE_API_URL`:
+
+```bash
+cp frontend/.env.example frontend/.env
+# edit frontend/.env to point to your backend URL
+```
+
+### 4. Start Docker services
 ```bash
 docker-compose up -d
 ```
 
-### 4. Run development servers
+### 5. Run development servers
 
 **Backend**
 ```bash

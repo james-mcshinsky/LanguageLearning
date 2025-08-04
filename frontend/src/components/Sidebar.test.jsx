@@ -1,7 +1,8 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, cleanup } from '@testing-library/react';
 import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest';
 import * as matchers from '@testing-library/jest-dom/matchers';
 import Sidebar from './Sidebar.jsx';
+import { MemoryRouter } from 'react-router-dom';
 
 expect.extend(matchers);
 
@@ -17,10 +18,15 @@ describe('Sidebar', () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
+    cleanup();
   });
 
   test('fetches and displays user stats', async () => {
-    const { container } = render(<Sidebar />);
+    const { container } = render(
+      <MemoryRouter>
+        <Sidebar />
+      </MemoryRouter>
+    );
     expect(fetch).toHaveBeenCalledWith('/api/user/stats');
     await waitFor(() => {
       expect(screen.getByText('Stats')).toBeInTheDocument();
@@ -29,5 +35,16 @@ describe('Sidebar', () => {
     });
     const statsContainer = container.querySelector('[aria-live="polite"]');
     expect(statsContainer).toBeInTheDocument();
+  });
+
+  test('renders navigation links', () => {
+    render(
+      <MemoryRouter>
+        <Sidebar />
+      </MemoryRouter>
+    );
+    expect(screen.getByRole('link', { name: /onboarding/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /goals/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /analytics/i })).toBeInTheDocument();
   });
 });

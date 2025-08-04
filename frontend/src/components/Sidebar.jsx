@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { NavLink } from 'react-router-dom';
 
 export default function Sidebar() {
   const [stats, setStats] = useState({ streak: 0, lingots: 0 });
@@ -31,6 +32,46 @@ export default function Sidebar() {
 
   return (
     <div className="space-y-4">
+      <nav aria-label="Secondary">
+        <ul className="space-y-2">
+          <li>
+            <NavLink
+              to="/onboarding"
+              className={({ isActive }) =>
+                `block px-sm py-xs rounded hover:bg-white/5 focus:bg-white/5 focus:outline-none ${
+                  isActive ? 'active' : ''
+                }`
+              }
+            >
+              Onboarding
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/goals"
+              className={({ isActive }) =>
+                `block px-sm py-xs rounded hover:bg-white/5 focus:bg-white/5 focus:outline-none ${
+                  isActive ? 'active' : ''
+                }`
+              }
+            >
+              Goals
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/analytics"
+              className={({ isActive }) =>
+                `block px-sm py-xs rounded hover:bg-white/5 focus:bg-white/5 focus:outline-none ${
+                  isActive ? 'active' : ''
+                }`
+              }
+            >
+              Analytics
+            </NavLink>
+          </li>
+        </ul>
+      </nav>
       <div>
         <h2 className="font-bold">Stats</h2>
         {error && (

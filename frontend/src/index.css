@@ -94,4 +94,34 @@
   .site-footer {
     @apply bg-surface text-text p-md text-center;
   }
+
+  .button-primary {
+    font-weight: 600;
+    background-color: #FFBF32;
+    color: #0F0F0F;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    transition: transform 0.2s;
+  }
+
+  .button-primary:hover,
+  .button-primary:focus {
+    text-decoration: underline;
+    transform: scale(1.05);
+  }
+
+  .button-secondary {
+    font-weight: 600;
+    background-color: #529917;
+    color: #FFFFFF;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    transition: transform 0.2s;
+  }
+
+  .button-secondary:hover,
+  .button-secondary:focus {
+    text-decoration: underline;
+    transform: scale(1.05);
+  }
 }

@@ -10,6 +10,8 @@ import os
 
 import requests
 
+from .vocabulary import get_top_coca_words
+
 
 def _generate_simple(
     known_words: Iterable[str],
@@ -72,12 +74,22 @@ def _generate_with_llm(
 
 
 def generate_blurb(
-    known_words: Iterable[str],
-    l_plus_one_words: Iterable[str],
+    known_words: Iterable[str] | None,
+    l_plus_one_words: Iterable[str] | None,
     length: int,
     use_llm: Optional[bool] = None,
 ) -> str:
-    """Return a short blurb using only whitelisted vocabulary."""
+    """Return a short blurb using only whitelisted vocabulary.
+
+    If both ``known_words`` and ``l_plus_one_words`` are empty, the function
+    falls back to the most common words from the COCA frequency list.
+    """
+
+    known_words = list(known_words or [])
+    l_plus_one_words = list(l_plus_one_words or [])
+    if not known_words and not l_plus_one_words:
+        known_words = get_top_coca_words()
+        l_plus_one_words = []
 
     if use_llm is None:
         use_llm = os.getenv("USE_LLM_BLURB", "").lower() in {"1", "true", "yes"}

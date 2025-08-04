@@ -47,3 +47,11 @@ export async function saveReviewState(state: Record<string, any>) {
     new PutCommand({ TableName: TABLE_NAME, Item: { pk: REVIEW_KEY, data: state } }),
   );
 }
+
+// Load the default top 650 words from the bundled COCA list
+export async function loadDefaultCocaWords(): Promise<string[]> {
+  const result = runPython(
+    "import json\nfrom language_learning.goals import load_default_goals\nprint(json.dumps([g.word for g in load_default_goals()]))",
+  );
+  return result || [];
+}

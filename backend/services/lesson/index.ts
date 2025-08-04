@@ -4,6 +4,7 @@ import {
   loadGoals,
   loadReviewState,
   saveReviewState,
+  loadDefaultCocaWords,
 } from '../../shared/database';
 
 export function createLessonService() {
@@ -18,15 +19,29 @@ export function createLessonService() {
   // Generate a lesson queue based on goals and spaced repetition state
   app.get('/queue', async (_req, res) => {
     const goals = await loadGoals();
+    const defaults = await loadDefaultCocaWords();
     const review = await loadReviewState();
+    const customGoals = goals.filter((g) => !g.is_default);
+    const activeGoals =
+      customGoals.length > 0
+        ? customGoals
+        : defaults.map((w) => ({ word: w }));
+    const goalRanks: Record<string, number> = {};
+    defaults.forEach((w, i) => {
+      goalRanks[w] = i + 1;
+    });
+    activeGoals.forEach((g, i) => {
+      goalRanks[g.word] = i + 1;
+    });
     const code = `
 import json, sys
 from datetime import datetime
 from language_learning.spaced_repetition import SRSFilter, SpacedRepetitionScheduler
 from language_learning.ai_lessons import generate_mcq_lesson
-goals=json.loads(sys.argv[1])
-review=json.loads(sys.argv[2])
-goal_ranks={g['word']: i+1 for i,g in enumerate(goals)}
+goal_ranks=json.loads(sys.argv[1])
+goals=json.loads(sys.argv[2])
+review=json.loads(sys.argv[3])
+visible_words=set(g['word'] for g in goals)
 filt=SRSFilter(goal_ranks)
 for word, info in review.items():
     st=filt.schedulers.setdefault(word, SpacedRepetitionScheduler()).state
@@ -39,7 +54,11 @@ while True:
     nxt=filt.pop_next_due()
     if not nxt:
         break
+    if visible_words and nxt not in visible_words:
+        del filt.schedulers[nxt]
+        continue
     review_words.append(nxt)
+    del filt.schedulers[nxt]
 new_words=[g['word'] for g in goals if g['word'] not in review or review[g['word']].get('repetitions',0)==0]
 new_words=[w for w in new_words if w not in review_words][:3]
 lesson=generate_mcq_lesson('practice', new_words, review_words)
@@ -47,8 +66,11 @@ print(json.dumps({'lesson': lesson, 'words': list(dict.fromkeys(new_words+review
 `;
     try {
       const result =
-        runPython(code, [JSON.stringify(goals), JSON.stringify(review)]) ||
-        { lesson: [], words: [] };
+        runPython(code, [
+          JSON.stringify(goalRanks),
+          JSON.stringify(activeGoals),
+          JSON.stringify(review),
+        ]) || { lesson: [], words: [] };
       const queue = [...(result.lesson || [])];
       const words: string[] = result.words || [];
       words.forEach((word) => {
@@ -75,16 +97,28 @@ print(json.dumps({'lesson': lesson, 'words': list(dict.fromkeys(new_words+review
   app.post('/review', async (req, res) => {
     const { word, quality } = req.body as { word: string; quality: number };
     const goals = await loadGoals();
+    const defaults = await loadDefaultCocaWords();
     const state = await loadReviewState();
+    const customGoals = goals.filter((g) => !g.is_default);
+    const activeGoals =
+      customGoals.length > 0
+        ? customGoals
+        : defaults.map((w) => ({ word: w }));
+    const goalRanks: Record<string, number> = {};
+    defaults.forEach((w, i) => {
+      goalRanks[w] = i + 1;
+    });
+    activeGoals.forEach((g, i) => {
+      goalRanks[g.word] = i + 1;
+    });
     const code = `
 import json, sys
 from datetime import datetime
 from language_learning.spaced_repetition import SRSFilter, SpacedRepetitionScheduler
-goals=json.loads(sys.argv[1])
+goal_ranks=json.loads(sys.argv[1])
 state=json.loads(sys.argv[2])
 word=sys.argv[3]
 quality=int(sys.argv[4])
-goal_ranks={g['word']: i+1 for i,g in enumerate(goals)}
 filt=SRSFilter(goal_ranks)
 for w, info in state.items():
     st=filt.schedulers.setdefault(w, SpacedRepetitionScheduler()).state
@@ -98,7 +132,7 @@ print(json.dumps({'state': new_state, 'next_review': new_state[word]['next_revie
 `;
     try {
       const result = runPython(code, [
-        JSON.stringify(goals),
+        JSON.stringify(goalRanks),
         JSON.stringify(state),
         word,
         String(quality),

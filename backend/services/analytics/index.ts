@@ -1,6 +1,10 @@
 import express from 'express';
 import { runPython } from '../../shared/utils';
-import { loadGoals, loadReviewState } from '../../shared/database';
+import {
+  loadGoals,
+  loadReviewState,
+  loadDefaultCocaWords,
+} from '../../shared/database';
 
 export function createAnalyticsService() {
   const app = express();
@@ -37,14 +41,28 @@ export function createAnalyticsService() {
   // Next five review items based on spaced repetition state
   app.get('/reviews/next', async (_req, res) => {
     const goals = await loadGoals();
+    const defaults = await loadDefaultCocaWords();
     const review = await loadReviewState();
+    const customGoals = goals.filter((g) => !g.is_default);
+    const activeGoals =
+      customGoals.length > 0
+        ? customGoals
+        : defaults.map((w) => ({ word: w }));
+    const goalRanks: Record<string, number> = {};
+    defaults.forEach((w, i) => {
+      goalRanks[w] = i + 1;
+    });
+    activeGoals.forEach((g, i) => {
+      goalRanks[g.word] = i + 1;
+    });
     const code = `
 import json, sys
 from datetime import datetime
 from language_learning.spaced_repetition import SRSFilter, SpacedRepetitionScheduler
-goals=json.loads(sys.argv[1])
+goal_ranks=json.loads(sys.argv[1])
 review=json.loads(sys.argv[2])
-goal_ranks={g['word']: i+1 for i,g in enumerate(goals)}
+visible=json.loads(sys.argv[3])
+visible=set(visible)
 filt=SRSFilter(goal_ranks)
 for word, info in review.items():
     st=filt.schedulers.setdefault(word, SpacedRepetitionScheduler()).state
@@ -57,14 +75,18 @@ for _ in range(5):
     nxt=filt.pop_next_due()
     if not nxt:
         break
+    if visible and nxt not in visible:
+        del filt.schedulers[nxt]
+        continue
     next_words.append(nxt)
     del filt.schedulers[nxt]
 print(json.dumps({'next': next_words}))
 `;
     try {
       const result = runPython(code, [
-        JSON.stringify(goals),
+        JSON.stringify(goalRanks),
         JSON.stringify(review),
+        JSON.stringify(activeGoals.map((g) => g.word)),
       ]);
       res.json(result);
     } catch (err: any) {

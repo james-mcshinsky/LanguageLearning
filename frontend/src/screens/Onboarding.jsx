@@ -80,31 +80,53 @@ export default function Onboarding() {
       {step === 1 && (
         <div>
           <h1 className="text-2xl font-bold mb-4">Choose your first goal</h1>
-          <div className="space-x-2 mb-4">
+          <div
+            className="space-x-2 mb-2"
+            role="group"
+            aria-label="Goal templates"
+            aria-describedby="template-instructions"
+          >
             {Object.keys(TEMPLATE_TEXT).map((name) => (
               <button
                 key={name}
                 onClick={() => handleTemplate(name)}
-                className={`px-3 py-1 border rounded ${
+                className={`px-3 py-1 border rounded focus:outline focus:outline-2 focus:outline-offset-2 ${
                   template === name ? 'bg-accent-primary text-inverse' : ''
                 }`}
+                aria-label={`Use ${name} template`}
               >
                 {name}
               </button>
             ))}
           </div>
+          <p id="template-instructions" className="text-sm text-gray-600 mb-4">
+            Use Tab to focus template buttons and Enter to select.
+          </p>
+          <label htmlFor="goal-text" className="block mb-1">
+            Enter or paste your own text
+          </label>
           <textarea
+            id="goal-text"
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="Or enter your own text"
-            className="w-full border p-2 mb-2 h-40"
+            className="w-full border p-2 mb-2 h-40 focus:outline focus:outline-2 focus:outline-offset-2"
           />
-          <input type="file" accept=".txt" onChange={handleFile} className="mb-4" />
+          <label htmlFor="goal-file" className="block mb-1">
+            Upload a text file
+          </label>
+          <input
+            id="goal-file"
+            type="file"
+            accept=".txt"
+            onChange={handleFile}
+            className="mb-4 focus:outline focus:outline-2 focus:outline-offset-2"
+          />
           <div>
             <button
               onClick={startExtraction}
               disabled={isLoading}
-              className="bg-accent-primary text-inverse px-4 py-2 rounded"
+              className="bg-accent-primary text-inverse px-4 py-2 rounded focus:outline focus:outline-2 focus:outline-offset-2"
             >
               Next
             </button>
@@ -130,7 +152,7 @@ export default function Onboarding() {
           <button
             onClick={saveGoals}
             disabled={isLoading}
-            className="bg-accent-primary text-inverse px-4 py-2 rounded"
+            className="bg-accent-primary text-inverse px-4 py-2 rounded focus:outline focus:outline-2 focus:outline-offset-2"
           >
             Save Goals
           </button>

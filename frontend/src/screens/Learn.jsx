@@ -117,30 +117,46 @@ export default function Learn() {
 
       {current.type === 'mcq' && (
         <div className="mt-4">
-          <p>{current.question}</p>
-          {current.choices.map((c, idx) => (
-            <button
-              key={idx}
-              onClick={() => handleMCQ(idx)}
-              className="block mt-2 p-2 border rounded"
-            >
-              {c}
-            </button>
-          ))}
+          <p id="mcq-question">{current.question}</p>
+          <div
+            role="radiogroup"
+            aria-labelledby="mcq-question"
+            aria-describedby="mcq-instructions"
+          >
+            {current.choices.map((c, idx) => (
+              <button
+                key={idx}
+                role="radio"
+                aria-checked="false"
+                onClick={() => handleMCQ(idx)}
+                className="block mt-2 p-2 border rounded focus:outline focus:outline-2 focus:outline-offset-2"
+              >
+                {c}
+              </button>
+            ))}
+          </div>
+          <p id="mcq-instructions" className="text-sm text-gray-600">
+            Use Tab to focus an answer and Enter to select.
+          </p>
         </div>
       )}
 
       {current.type === 'fill_blank' && (
         <div className="mt-4">
-          <p>{current.sentence}</p>
+          <p id="fill-sentence">{current.sentence}</p>
+          <label htmlFor="fill-input" className="block mt-2">
+            Your answer
+          </label>
           <input
+            id="fill-input"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            className="border p-1 mt-2"
+            className="border p-1 focus:outline focus:outline-2 focus:outline-offset-2"
+            aria-labelledby="fill-sentence"
           />
           <button
             onClick={handleFillBlank}
-            className="ml-2 p-1 border rounded"
+            className="ml-2 p-1 border rounded focus:outline focus:outline-2 focus:outline-offset-2"
           >
             Submit
           </button>
@@ -177,7 +193,10 @@ export default function Learn() {
       {current.type === 'grammar_tip' && (
         <div className="mt-4">
           <p className="italic">{current.tip}</p>
-          <button onClick={next} className="mt-2 p-1 border rounded">
+          <button
+            onClick={next}
+            className="mt-2 p-1 border rounded focus:outline focus:outline-2 focus:outline-offset-2"
+          >
             Next
           </button>
         </div>

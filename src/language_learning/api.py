@@ -8,14 +8,14 @@ from tempfile import NamedTemporaryFile
 from typing import List, Optional
 
 from fastapi import FastAPI
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from .ai_lessons import generate_lesson, generate_mcq_lesson
 from .ai_blurbs import generate_blurb
 from .goals import GoalItem, GoalManager, load_default_goals
 from .media_integration import suggest_media
 from .storage import JSONStorage
-from .vocabulary import extract_vocabulary
+from .vocabulary import extract_vocabulary, get_top_coca_words
 
 
 class GoalIn(BaseModel):
@@ -29,13 +29,13 @@ class VocabularyIn(BaseModel):
 
 class LessonPromptsIn(BaseModel):
     topic: str
-    new_words: list[str] | None = None
-    review_words: list[str] | None = None
+    new_words: list[str] = Field(default_factory=list)
+    review_words: list[str] = Field(default_factory=list)
 
 
 class BlurbIn(BaseModel):
-    known_words: List[str] | None = None
-    l_plus_one_words: List[str] | None = None
+    known_words: List[str] = Field(default_factory=list)
+    l_plus_one_words: List[str] = Field(default_factory=list)
     length: int = 0
 
 
@@ -71,9 +71,9 @@ def create_app(storage: Optional[JSONStorage] = None) -> FastAPI:
 
     @app.post("/lesson/prompts")
     def lesson_prompts(data: LessonPromptsIn):
-        prompts = generate_mcq_lesson(
-            data.topic, data.new_words, data.review_words
-        )
+        new_words = data.new_words or get_top_coca_words()
+        review_words = data.review_words or get_top_coca_words()
+        prompts = generate_mcq_lesson(data.topic, new_words, review_words)
         return {"prompts": prompts}
 
     @app.post("/vocabulary")
@@ -90,16 +90,18 @@ def create_app(storage: Optional[JSONStorage] = None) -> FastAPI:
 
     @app.post("/blurb")
     def blurb(data: BlurbIn):
-        text = generate_blurb(
-            data.known_words, data.l_plus_one_words, data.length
-        )
+        known_words = data.known_words or get_top_coca_words()
+        l_plus_one_words = data.l_plus_one_words or get_top_coca_words()
+        text = generate_blurb(known_words, l_plus_one_words, data.length)
         return {"blurb": text}
 
     @app.post("/blurb/llm")
     def blurb_llm(data: BlurbIn):
+        known_words = data.known_words or get_top_coca_words()
+        l_plus_one_words = data.l_plus_one_words or get_top_coca_words()
         text = generate_blurb(
-            data.known_words,
-            data.l_plus_one_words,
+            known_words,
+            l_plus_one_words,
             data.length,
             use_llm=True,
         )

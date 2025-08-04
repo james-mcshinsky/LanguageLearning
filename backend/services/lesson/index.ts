@@ -66,11 +66,11 @@ print(json.dumps({'lesson': lesson, 'words': list(dict.fromkeys(new_words+review
 `;
     try {
       const result =
-        runPython(code, [
+        (await runPython(code, [
           JSON.stringify(goalRanks),
           JSON.stringify(activeGoals),
           JSON.stringify(review),
-        ]) || { lesson: [], words: [] };
+        ])) || { lesson: [], words: [] };
       const queue = [...(result.lesson || [])];
       const words: string[] = result.words || [];
       words.forEach((word) => {
@@ -131,7 +131,7 @@ new_state={w:{'repetitions':s.state.repetitions,'interval':s.state.interval,'efa
 print(json.dumps({'state': new_state, 'next_review': new_state[word]['next_review']}))
 `;
     try {
-      const result = runPython(code, [
+      const result = await runPython(code, [
         JSON.stringify(goalRanks),
         JSON.stringify(state),
         word,
@@ -145,7 +145,7 @@ print(json.dumps({'state': new_state, 'next_review': new_state[word]['next_revie
   });
 
   // AI-generated lesson content
-  app.get('/lesson', (req, res) => {
+  app.get('/lesson', async (req, res) => {
     const topic = (req.query.topic as string) || '';
     const code = `
 import json, sys
@@ -154,7 +154,7 @@ topic=sys.argv[1]
 print(json.dumps(generate_lesson(topic)))
 `;
     try {
-      const lesson = runPython(code, [topic]);
+      const lesson = await runPython(code, [topic]);
       res.json(lesson);
     } catch (err: any) {
       res.status(500).json({ error: err.message });

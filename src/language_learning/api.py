@@ -12,7 +12,7 @@ from pydantic import BaseModel
 
 from .ai_lessons import generate_lesson, generate_mcq_lesson
 from .ai_blurbs import generate_blurb
-from .goals import GoalItem, GoalManager
+from .goals import GoalItem, GoalManager, load_default_goals
 from .media_integration import suggest_media
 from .storage import JSONStorage
 from .vocabulary import extract_vocabulary
@@ -44,7 +44,12 @@ def create_app(storage: Optional[JSONStorage] = None) -> FastAPI:
 
     store = storage or JSONStorage(os.environ.get("DATA_PATH", "storage.json"))
     goal_manager = GoalManager()
-    for item in store.load_goals():
+    stored_goals = store.load_goals()
+    if not stored_goals:
+        stored_goals = list(load_default_goals())
+        if stored_goals:
+            store.save_goals(stored_goals)
+    for item in stored_goals:
         goal_manager.create_goal(item)
 
     app = FastAPI()

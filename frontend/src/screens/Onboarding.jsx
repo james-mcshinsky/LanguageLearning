@@ -137,15 +137,18 @@ export default function Onboarding() {
         <Card>
           <h2 className="text-xl mb-s">Select words to learn</h2>
           <ul className="mb-s">
-            {vocab.map((word) => (
-              <li key={word} className="flex items-center mb-xxs">
-                <input
-                  type="checkbox"
-                  checked={selected.includes(word)}
-                  onChange={() => toggleWord(word)}
-                  className="mr-xxs"
-                />
-                <span>{word}</span>
+            {vocab.map((word, idx) => (
+              <li key={word} className="mb-xxs">
+                <label htmlFor={`word-${idx}`} className="flex items-center">
+                  <input
+                    id={`word-${idx}`}
+                    type="checkbox"
+                    checked={selected.includes(word)}
+                    onChange={() => toggleWord(word)}
+                    className="mr-xxs"
+                  />
+                  {word}
+                </label>
               </li>
             ))}
           </ul>

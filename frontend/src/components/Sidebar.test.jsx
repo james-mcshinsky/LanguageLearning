@@ -45,6 +45,18 @@ describe('Sidebar', () => {
     );
     expect(screen.getByRole('link', { name: /dashboard/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /goals/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /vocabulary/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /analytics/i })).toBeInTheDocument();
+  });
+
+  test('includes link to vocabulary page', () => {
+    render(
+      <MemoryRouter>
+        <Sidebar />
+      </MemoryRouter>
+    );
+    const vocabLink = screen.getByRole('link', { name: /vocabulary/i });
+    expect(vocabLink).toBeInTheDocument();
+    expect(vocabLink).toHaveAttribute('href', '/vocabulary');
   });
 });

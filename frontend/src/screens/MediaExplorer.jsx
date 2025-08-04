@@ -131,13 +131,21 @@ export default function MediaExplorer() {
           {showCaptions && item.transcript && (
             <div style={{ fontSize: `${fontSize}px` }} className="mt-2">
               {item.transcript.split(/\s+/).map((w, i) => (
-                <span
-                  key={i}
-                  onClick={() => handleWordClick(w)}
-                  className="cursor-pointer hover:underline"
-                >
-                  {w}{' '}
-                </span>
+                <React.Fragment key={i}>
+                  <button
+                    type="button"
+                    onClick={() => handleWordClick(w)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleWordClick(w);
+                      }
+                    }}
+                    className="inline bg-transparent p-0 m-0 border-0 cursor-pointer hover:underline focus:underline focus:outline-none"
+                  >
+                    {w}
+                  </button>{' '}
+                </React.Fragment>
               ))}
             </div>
           )}

@@ -80,9 +80,9 @@ export default function Onboarding() {
         {isLoading && <p>Loading...</p>}
         {error && <p>{error}</p>}
       </div>
-      {step === 1 && (
+        {step === 1 && (
         <Card>
-          <h1 className="text-2xl font-bold mb-md">Choose your first goal</h1>
+          <h1 className="text-2xl mb-md">Choose your first goal</h1>
           <div
             className="space-x-sm mb-sm"
             role="group"
@@ -133,9 +133,9 @@ export default function Onboarding() {
         </Card>
       )}
 
-      {step === 2 && (
+        {step === 2 && (
         <Card>
-          <h2 className="text-xl font-bold mb-md">Select words to learn</h2>
+          <h2 className="text-xl mb-md">Select words to learn</h2>
           <ul className="mb-md">
             {vocab.map((word) => (
               <li key={word} className="flex items-center mb-xs">
@@ -155,10 +155,11 @@ export default function Onboarding() {
         </Card>
       )}
 
-      {step === 3 && (
+        {step === 3 && (
         <Card>
-          <h2 className="text-xl font-bold mb-sm">Goals saved!</h2>
+          <h2 className="mb-sm">Goals saved!</h2>
           <p>You are ready to start learning.</p>
+          <Card.Button className="mt-md">Start Learning</Card.Button>
         </Card>
       )}
     </div>

@@ -70,18 +70,6 @@ export default function Sidebar() {
               Vocabulary
             </NavLink>
           </li>
-          <li>
-            <NavLink
-              to="/analytics"
-              className={({ isActive }) =>
-                `block px-xs py-xxs rounded hover:bg-white/5 focus:bg-white/5 focus:outline-none ${
-                  isActive ? 'active' : ''
-                }`
-              }
-            >
-              Analytics
-            </NavLink>
-          </li>
         </ul>
       </nav>
       <div>

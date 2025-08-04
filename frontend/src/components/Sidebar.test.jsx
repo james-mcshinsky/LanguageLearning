@@ -46,7 +46,7 @@ describe('Sidebar', () => {
     expect(screen.getByRole('link', { name: /dashboard/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /goals/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /vocabulary/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /analytics/i })).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /analytics/i })).not.toBeInTheDocument();
   });
 
   test('includes link to vocabulary page', () => {

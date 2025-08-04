@@ -3,6 +3,7 @@ import ProgressOverview from '../components/ProgressOverview.jsx';
 import Button from '../components/ui/Button';
 import { useNavigate } from 'react-router-dom';
 import { apiClient } from '../services/api.js';
+import Analytics from './Analytics.jsx';
 
 export default function Dashboard() {
   const [progress, setProgress] = useState({ learned: 0, total: 0 });
@@ -44,6 +45,7 @@ export default function Dashboard() {
             <Button onClick={() => navigate('/learn')}>Work with AI Tutor</Button>
             <Button onClick={() => navigate('/media')}>Browse Media</Button>
           </div>
+          <Analytics />
         </>
       )}
     </div>

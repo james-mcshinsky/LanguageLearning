@@ -86,7 +86,12 @@ def extract_vocabulary(
         else Path(__file__).with_name("coca.csv")
     )
     if coca_file.exists():
-        counts.update(_load_coca_counts(str(coca_file)))
+        coca_counts = _load_coca_counts(str(coca_file))
+        # Only boost counts for words present in the corpus to avoid
+        # introducing unrelated vocabulary from the COCA list.
+        for word in list(counts.keys()):
+            if word in coca_counts:
+                counts[word] += coca_counts[word]
 
     # Adjust counts according to goal weights
     if goals:

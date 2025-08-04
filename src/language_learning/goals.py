@@ -41,7 +41,7 @@ class GoalManager:
         return list(self._goals.values())
 
 
-def load_default_goals(limit: int = 650) -> Iterator[GoalItem]:
+def load_default_goals(limit: int = 5) -> Iterator[GoalItem]:
     """Yield the top ``limit`` goals from the bundled COCA frequency list."""
 
     path = Path(__file__).with_name("coca.csv")

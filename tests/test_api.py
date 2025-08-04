@@ -24,7 +24,7 @@ def test_goal_setup_and_persistence(tmp_path):
     assert resp.status_code == 200
     goals = resp.json()["goals"]
     assert any(g["word"] == "hello" and not g.get("is_default") for g in goals)
-    assert len(goals) == 650
+    assert len(goals) == 6
 
     with open(storage.path, "r", encoding="utf-8") as fh:
         data = json.load(fh)
@@ -38,7 +38,7 @@ def test_create_app_loads_default_goals(tmp_path):
     resp = client.get("/goals")
     assert resp.status_code == 200
     goals = resp.json()["goals"]
-    assert len(goals) == 650
+    assert len(goals) == 5
     assert all(g.get("is_default") for g in goals)
 
 

@@ -1,5 +1,5 @@
 import express from 'express';
-import { runPython } from '../../shared/utils';
+import { runPython, buildGoalRanks } from '../../shared/utils';
 import {
   loadGoals,
   loadReviewState,
@@ -43,18 +43,7 @@ export function createAnalyticsService() {
     const goals = await loadGoals();
     const defaults = await loadDefaultCocaWords();
     const review = await loadReviewState();
-    const customGoals = goals.filter((g) => !g.is_default);
-    const activeGoals =
-      customGoals.length > 0
-        ? customGoals
-        : defaults.map((w) => ({ word: w }));
-    const goalRanks: Record<string, number> = {};
-    defaults.forEach((w, i) => {
-      goalRanks[w] = i + 1;
-    });
-    activeGoals.forEach((g, i) => {
-      goalRanks[g.word] = i + 1;
-    });
+    const { activeGoals, goalRanks } = buildGoalRanks(goals, defaults, review);
     const code = `
 import json, sys
 from datetime import datetime

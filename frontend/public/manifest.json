@@ -1,0 +1,16 @@
+{
+  "short_name": "LanguageLearning",
+  "name": "Language Learning",
+  "description": "Demo manifest for offline UI assets",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "16x16",
+      "type": "image/x-icon"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff"
+}
